@@ -1,8 +1,12 @@
-import { useEffect } from 'react';
+import Head from 'next/head';
 
 export default function Training() {
-  useEffect(() => {
-    window.location.href = '/pages/training.html';
-  }, []);
-  return null;
+    return (
+        <>
+            <Head>
+                <title>Беговая подготовка</title>
+            </Head>
+            <main></main>
+        </>
+    );
 }

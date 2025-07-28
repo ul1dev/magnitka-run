@@ -1,8 +1,12 @@
-import { useEffect } from 'react';
+import Head from 'next/head';
 
 export default function Asia() {
-  useEffect(() => {
-    window.location.href = '/pages/asia-urope-maraphone.html';
-  }, []);
-  return null;
+    return (
+        <>
+            <Head>
+                <title>Полумарафон азия-европа</title>
+            </Head>
+            <main></main>
+        </>
+    );
 }

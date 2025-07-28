@@ -1,8 +1,12 @@
-import { useEffect } from 'react';
+import Head from 'next/head';
 
 export default function Index() {
-  useEffect(() => {
-    window.location.href = '/pages/index.html';
-  }, []);
-  return null;
+    return (
+        <>
+            <Head>
+                <title>Беговое сообщество - Азия-Европа в Магнитогорске</title>
+            </Head>
+            <main></main>
+        </>
+    );
 }
