@@ -1,5 +1,6 @@
 // libs
 @import 'tailwindcss';
+@import 'animate.css';
 
 @font-face {
     font-family: 'YFFRAREGigaBold';
@@ -21,7 +22,7 @@
 }
 
 :root {
-    --background: #ffffff;
+    --background: #f7f7f7;
     --foreground: #171717;
 }
 
@@ -32,4 +33,5 @@
 body {
     background: var(--background);
     color: var(--foreground);
+    overflow-x: hidden;
 }

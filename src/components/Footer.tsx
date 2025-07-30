@@ -6,7 +6,7 @@ import logoImg from '@/app/static/images/logotype.svg';
 
 export default function Footer() {
     return (
-        <footer className="bg-[#003593] rounded-t-4xl px-8 max-lg:px-4 pt-16 max-[500px]:!pb-10 max-xl:pb-20 pb-28 text-white">
+        <footer className="bg-[#003593] rounded-t-[50px] max-2xl:rounded-t-4xl max-lg:rounded-t-3xl px-8 max-lg:px-4 pt-16 max-[500px]:!pb-10 max-xl:pb-20 pb-28 text-white">
             <div className="flex max-md:flex-col max-md:gap-10 max-lg:gap-14 max-xl:gap-20 gap-28 max-md:max-w-md max-md:mx-auto">
                 <div className="flex flex-col items-start justify-between">
                     <Image
