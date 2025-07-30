@@ -1,0 +1,35 @@
+// libs
+@import 'tailwindcss';
+
+@font-face {
+    font-family: 'YFFRAREGigaBold';
+    src: url('../static/fonts/Inter-Regular.woff') format('woff');
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'YFFRAREGigaBold';
+    src: url('../static/fonts/yff-rare_giga-bold.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'YFFRAREGigaBold';
+    src: url('../static/fonts/yff-rare_mega-bold.woff') format('woff');
+    font-weight: 800;
+    font-style: normal;
+}
+
+:root {
+    --background: #ffffff;
+    --foreground: #171717;
+}
+
+* {
+    font-family: 'YFFRAREGigaBold', Arial, sans-serif;
+}
+
+body {
+    background: var(--background);
+    color: var(--foreground);
+}
