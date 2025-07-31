@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import styles from './HamburgerButton.module.css';
+import styles from './HamburgerButton.module.scss';
 
 type Props = {
     onClick: () => void;

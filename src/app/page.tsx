@@ -1,8 +1,9 @@
 import MainLayout from '@/components/MainLayout';
 import bgImg from '@/app/static/images/ZEA_0745_1.jpg.webp';
-import Races from '@/components/home/Races';
+import HomeRaces from '@/components/home/Races';
 import { Race } from '@/components/home/types';
-import Galary from '@/components/home/Galary';
+import HomeGalary from '@/components/home/Galary';
+import HomeTimer from '@/components/home/Timer';
 
 export default function Home() {
     const races: Race[] = [
@@ -62,9 +63,11 @@ export default function Home() {
                 </div>
             </div>
 
-            <Races items={races} />
+            <HomeRaces items={races} />
 
-            <Galary />
+            <HomeGalary />
+
+            <HomeTimer />
         </MainLayout>
     );
 }

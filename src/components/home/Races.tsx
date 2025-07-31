@@ -10,7 +10,7 @@ interface Props {
     items: Race[];
 }
 
-const Races: FC<Props> = ({ items }) => {
+const HomeRaces: FC<Props> = ({ items }) => {
     const { ref: animateRef, inView: animateInView } = useInView({
         triggerOnce: true,
         threshold: 0.2,
@@ -19,7 +19,7 @@ const Races: FC<Props> = ({ items }) => {
     return (
         <div
             ref={animateRef}
-            className="bg-white rounded-[50px] max-2xl:rounded-4xl max-lg:rounded-3xl -mt-10 px-8 max-2xl:px-6 max-sm:px-4 max-[500px]:!px-3 pt-20 pb-10 max-lg:pb-6 max-sm:pb-4 max-[500px]:!pb-3 relative z-10"
+            className="bg-white rounded-[50px] max-2xl:rounded-4xl max-lg:rounded-3xl -mt-10 px-8 max-2xl:px-6 max-sm:px-4 max-[500px]:!px-3 pt-20 max-lg:pt-14 max-sm:pt-12 max-[500px]:!pt-10 max-[450px]:!pt-8 pb-10 max-lg:pb-6 max-sm:pb-4 max-[500px]:!pb-3 relative z-10"
         >
             <h2
                 className={`font-extrabold uppercase text-7xl max-2xl:text-5xl max-lg:text-4xl max-[500px]:!text-3xl max-[450px]:!text-2xl max-[360px]:!text-xl max-sm:text-center animate__animated ${
@@ -57,4 +57,4 @@ const Races: FC<Props> = ({ items }) => {
     );
 };
 
-export default Races;
+export default HomeRaces;
