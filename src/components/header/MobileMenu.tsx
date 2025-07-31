@@ -2,9 +2,9 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import TelegramIcon from './icons/TelegramIcon';
-import VKIcon from './icons/VKIcon';
-import ChatIcon from './icons/ChatIcon';
+import TelegramIcon from '@/components/icons/TelegramIcon';
+import VKIcon from '@/components/icons/VKIcon';
+import ChatIcon from '@/components/icons/ChatIcon';
 
 type Props = {
     isOpen: boolean;

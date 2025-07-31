@@ -1,29 +1,11 @@
 import MainLayout from '@/components/MainLayout';
-
 import bgImg from '@/app/static/images/ZEA_0745_1.jpg.webp';
-
-interface Marathon {
-    title?: string;
-    dates?: string;
-    isRegBtn?: boolean;
-    regBtnUrl?: string;
-    regBtnTextColor?: string;
-    regBtnBgColor?: string;
-    regBtnBorderColor?: string;
-    isMoreBtn?: boolean;
-    moreBtnUrl?: string;
-    bgColor?: string;
-    bgImg?: string;
-    btnsPosition?:
-        | 'top-left'
-        | 'top-right'
-        | 'bottom-left'
-        | 'bottom-right'
-        | 'center';
-}
+import Races from '@/components/home/Races';
+import { Race } from '@/components/home/types';
+import Galary from '@/components/home/Galary';
 
 export default function Home() {
-    const marathons: Marathon[] = [
+    const races: Race[] = [
         {
             title: `Полумарафон\nАзия-Европа`,
             dates: '6-7 сентября',
@@ -33,23 +15,28 @@ export default function Home() {
             regBtnBgColor: '#FFFFFF',
             isMoreBtn: true,
             moreBtnUrl: '/asia-europehalfmarathon',
-            bgImg: '/static/images/marathon-asia-europe.jpg',
+            moreBtnTextColor: '#FFFFFF',
+            moreBtnBorderColor: '#FFFFFF',
+            bgImg: 'https://optim.tildacdn.com/tild3338-6562-4138-a365-653138396332/-/format/webp/_2_2.jpg.webp',
+            date: new Date('2025-09-06'),
         },
         {
             isRegBtn: true,
             regBtnUrl: 'https://myrace.info/events/1014',
             regBtnTextColor: '#16bc05',
             regBtnBgColor: '#FFFFFF',
-            bgImg: '/static/images/marathon-asia-europe.jpg',
+            bgImg: 'https://static.tildacdn.com/tild3531-3932-4365-a266-323063346535/photo.jpeg',
             btnsPosition: 'top-right',
+            date: new Date('2025-09-12'),
         },
         {
             isRegBtn: true,
             regBtnUrl: 'https://myrace.info/events/1004',
             regBtnTextColor: '#003593',
             regBtnBgColor: '#FFFFFF',
-            bgImg: '/static/images/marathon-asia-europe.jpg',
-            btnsPosition: 'top-right',
+            bgImg: 'https://optim.tildacdn.com/tild6261-3862-4130-a565-386534373836/-/format/webp/__2025-04-22__123030.png.webp',
+            btnsPosition: 'center',
+            date: new Date('2025-09-20'),
         },
     ];
 
@@ -75,24 +62,9 @@ export default function Home() {
                 </div>
             </div>
 
-            <div className="bg-white rounded-[50px] max-2xl:rounded-4xl max-lg:rounded-3xl -mt-10 px-6 max-sm:px-4 max-[500px]:!px-3 pt-20 pb-10 max-lg:pb-6 max-sm:pb-4 max-[500px]:!pb-3 relative z-10">
-                <h2 className="font-extrabold uppercase text-7xl max-2xl:text-5xl max-lg:text-4xl max-[500px]:!text-3xl max-[450px]:!text-2xl max-[360px]:!text-xl max-sm:text-center  animate__animated animate__fadeInRight">
-                    Почувствуй ритм <br /> движения
-                </h2>
-                <p className="mt-2 max-sm:text-center text-xl max-2xl:text-base max-lg:text-sm max-[500px]:!text-xs ">
-                    Участвуй в забегах, созданных для тебя и твоих близких.
-                </p>
+            <Races items={races} />
 
-                <div className="grid grid-cols-2 justify-between mt-12 gap-6">
-                    <div className="w-full h-48 bg-blue-500 rounded-2xl"></div>
-                    <div className="w-full h-48 bg-blue-500 rounded-2xl"></div>
-                    <div className="w-full h-48 bg-blue-500 rounded-2xl"></div>
-                </div>
-            </div>
-
-            <div className="bg-[#f7f7f7] pt-28 pb-20">
-                <h2>Галерея моментов</h2>
-            </div>
+            <Galary />
         </MainLayout>
     );
 }
