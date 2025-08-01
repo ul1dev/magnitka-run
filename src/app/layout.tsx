@@ -46,7 +46,7 @@ export default function RootLayout({
                     href="/static/meta/IMG_6906.PNG"
                 />
             </head>
-            <body>
+            <body className="min-w-xs max-w-[2300px] mx-auto">
                 <Header />
 
                 <main>{children}</main>

@@ -20,7 +20,7 @@ const Header = () => {
 
     return (
         <>
-            <header className="bg-white shadow-[0px_0px_10px_0px_rgba(0,0,0,0.1)] max-lg:py-5 max-lg:px-6 py-3 px-8 min-lg:rounded-lg flex justify-between items-center fixed top-0 left-0 right-0 max-lg:m-0 max-xl:my-4 max-xl:mx-6 my-6 mx-8 z-50">
+            <header className="bg-white shadow-[0px_0px_10px_0px_rgba(0,0,0,0.1)] max-lg:py-5 max-lg:px-6 py-3 px-8 min-lg:rounded-lg flex justify-between items-center fixed top-0 left-0 right-0 max-lg:m-0 max-xl:my-4 max-xl:mx-6 my-6 mx-8 z-50 min-w-xs max-w-[2250px] min-[2350px]:mx-auto">
                 <Link href="/">
                     <Image
                         src={logoIcon}

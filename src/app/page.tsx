@@ -72,24 +72,22 @@ export default function Home() {
 
     return (
         <MainLayout title="Беговое сообщество - Азия-Европа в Магнитогорске">
-            <div className="bg-black">
-                <div
-                    style={{
-                        backgroundImage: `url(${bgImg.src})`,
-                    }}
-                    className="max-xl:bg-cover max-xl:bg-center bg-no-repeat xl:bg-[size:110%_auto] xl:bg-[position:90%_70%] h-[110vh] max-2xl:h-screen flex flex-col items-center justify-center text-white text-center"
-                >
-                    <h1 className="font-extrabold uppercase text-7xl max-2xl:text-5xl max-lg:text-4xl max-[450px]:!text-3xl max-w-5xl max-2xl:max-w-3xl max-lg:max-w-lg max-sm:max-w-sm max-[450px]:!max-w-xs">
-                        Беговое движение "азия-европа"
-                    </h1>
-                    <p className="max-sm:hidden text-xl max-2xl:text-base max-lg:text-sm mt-6 max-2xl:mt-4 max-lg:mt-3">
-                        Стань частью движения, беги к своим мечтам.
-                    </p>
-                    <p className="sm:hidden text-base mt-6 max-[450px]:text-sm">
-                        Присоединяйтесь к нам, участвуйте <br /> в забегах,
-                        достигайте новых целей <br /> и побед.
-                    </p>
-                </div>
+            <div
+                style={{
+                    backgroundImage: `url(${bgImg.src})`,
+                }}
+                className="max-xl:bg-cover max-xl:bg-center bg-no-repeat xl:bg-[size:110%_auto] xl:bg-[position:90%_70%] h-[110vh] max-2xl:h-screen flex flex-col items-center justify-center text-white text-center"
+            >
+                <h1 className="font-extrabold uppercase text-7xl max-2xl:text-5xl max-lg:text-4xl max-[450px]:!text-3xl max-w-5xl max-2xl:max-w-3xl max-lg:max-w-lg max-sm:max-w-sm max-[450px]:!max-w-xs">
+                    Беговое движение "азия-европа"
+                </h1>
+                <p className="max-sm:hidden text-xl max-2xl:text-base max-lg:text-sm mt-6 max-2xl:mt-4 max-lg:mt-3">
+                    Стань частью движения, беги к своим мечтам.
+                </p>
+                <p className="sm:hidden text-base mt-6 max-[450px]:text-sm">
+                    Присоединяйтесь к нам, участвуйте <br /> в забегах,
+                    достигайте новых целей <br /> и побед.
+                </p>
             </div>
 
             <HomeRaces items={races} />
