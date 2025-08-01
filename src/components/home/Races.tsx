@@ -33,8 +33,8 @@ const HomeRaces: FC<Props> = ({ items }) => {
             </p>
 
             <div className="grid grid-cols-2 max-lg:grid-cols-1 justify-between mt-12 max-sm:mt-8 gap-6 max-sm:gap-4">
-                {items.map((item, i) => (
-                    <RaceCard key={i} item={item} />
+                {items.map((item) => (
+                    <RaceCard key={item.id} item={item} />
                 ))}
 
                 {items.length % 2 !== 0 && (

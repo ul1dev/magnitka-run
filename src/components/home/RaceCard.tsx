@@ -15,6 +15,7 @@ const RaceCard: FC<Props> = ({ item }) => {
     const router = useRouter();
 
     const {
+        id,
         title,
         dates,
         isRegBtn,
@@ -23,7 +24,6 @@ const RaceCard: FC<Props> = ({ item }) => {
         regBtnBgColor,
         regBtnBorderColor,
         isMoreBtn,
-        moreBtnUrl,
         moreBtnTextColor,
         moreBtnBgColor,
         moreBtnBorderColor,
@@ -34,9 +34,11 @@ const RaceCard: FC<Props> = ({ item }) => {
 
     const [yPos, xPos] = btnsPosition?.split('-') || [];
 
+    const raceUrl = `/races/${id}`;
+
     const handleClick = () => {
-        if (isMoreBtn && moreBtnUrl) {
-            router.push(moreBtnUrl);
+        if (isMoreBtn) {
+            router.push(raceUrl);
         }
     };
 
@@ -109,7 +111,7 @@ const RaceCard: FC<Props> = ({ item }) => {
                     )}
 
                     {isMoreBtn && (
-                        <Link href={moreBtnUrl ?? '#'} className="w-full">
+                        <Link href={raceUrl ?? '#'} className="w-full">
                             <CardBtn
                                 borderColor={moreBtnBorderColor}
                                 textColor={moreBtnTextColor}
