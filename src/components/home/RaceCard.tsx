@@ -99,7 +99,11 @@ const RaceCard: FC<Props> = ({ item }) => {
                     )}
                 >
                     {isRegBtn && (
-                        <Link href={regBtnUrl ?? '#'} className="w-full">
+                        <Link
+                            href={regBtnUrl ?? '#'}
+                            className="w-full"
+                            target="_blank"
+                        >
                             <CardBtn
                                 borderColor={regBtnBorderColor}
                                 textColor={regBtnTextColor}

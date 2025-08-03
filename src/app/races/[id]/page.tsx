@@ -1,12 +1,29 @@
-import MainLayout from '@/components/MainLayout';
 import { notFound } from 'next/navigation';
 import { Race } from '@/components/home/types';
 import RaceStart from '@/components/race/Start';
 import RaceInfo from '@/components/race/Info';
+import { Metadata } from 'next';
 
 interface PageProps {
     params: {
         id: string;
+    };
+}
+
+export async function generateMetadata({
+    params: { id },
+}: PageProps): Promise<Metadata> {
+    // const res = await fetch(`${API_URL}/races/${id}`, { cache: 'no-store' });
+
+    // if (!res.ok) {
+    //     // if the API returned 404, tell Next.js to render the 404 page
+    //     notFound();
+    // }
+
+    // const race: Race = await res.json();
+
+    return {
+        title: 'Полумарафон Азия-Европа',
     };
 }
 
@@ -121,11 +138,9 @@ export default async function RacePage({ params: { id } }: PageProps) {
     };
 
     return (
-        <MainLayout title={race.title}>
-            <div className="bg-white">
-                <RaceStart race={race} />
-                <RaceInfo race={race} />
-            </div>
-        </MainLayout>
+        <div className="bg-white">
+            <RaceStart race={race} />
+            <RaceInfo race={race} />
+        </div>
     );
 }

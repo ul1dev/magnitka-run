@@ -48,7 +48,11 @@ const RaceInfoPartners: FC<Props> = ({ race }) => {
                             </h3>
                             <div className="flex flex-wrap items-center gap-6 max-sm:gap-4">
                                 {group.items.map((partner, idx) => (
-                                    <Link key={idx} href={partner.link ?? '#'}>
+                                    <Link
+                                        key={idx}
+                                        href={partner.link ?? '#'}
+                                        target="_blank"
+                                    >
                                         <Image
                                             src={partner.img}
                                             alt={`${group.label} logo`}

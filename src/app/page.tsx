@@ -1,9 +1,9 @@
-import MainLayout from '@/components/MainLayout';
-import bgImg from '@/app/static/images/ZEA_0745_1.jpg.webp';
 import HomeRaces from '@/components/home/Races';
 import { Race } from '@/components/home/types';
 import HomeGalary from '@/components/home/Galary';
 import HomeTimer from '@/components/home/Timer';
+
+import bgImg from '@/app/static/images/ZEA_0745_1.jpg.webp';
 
 export default function Home() {
     const races: Race[] = [
@@ -58,7 +58,7 @@ export default function Home() {
     ];
 
     return (
-        <MainLayout title="Беговое сообщество - Азия-Европа в Магнитогорске">
+        <>
             <div
                 style={{
                     backgroundImage: `url(${bgImg.src})`,
@@ -82,6 +82,6 @@ export default function Home() {
             <HomeGalary />
 
             <HomeTimer />
-        </MainLayout>
+        </>
     );
 }

@@ -27,6 +27,12 @@ export default function MobileMenu({ isOpen, onClose }: Props) {
         { id: 'contacts', label: 'Контакты' },
     ];
 
+    const trainingNavItems = [
+        { id: 'formats', label: 'Форматы тренировок' },
+        { id: 'trainers', label: 'Тренеры' },
+        { id: 'pacemakers', label: 'Пейсеры Магнитки' },
+    ];
+
     return (
         <div
             className={`fixed inset-0 z-[100] flex ${
@@ -101,23 +107,45 @@ export default function MobileMenu({ isOpen, onClose }: Props) {
                             ))}
                         </ul>
 
-                        <ul className="space-y-3 text-white text-xl">
-                            {raceNavItems.map(({ id, label }) => (
-                                <li key={id}>
-                                    <Link
-                                        href={`#${id}`}
-                                        className={`
+                        {pathname.includes('/races/') && (
+                            <ul className="space-y-3 text-white text-xl">
+                                {raceNavItems.map(({ id, label }) => (
+                                    <li key={id}>
+                                        <Link
+                                            href={`#${id}`}
+                                            className={`
                                           block
                                           transition-opacity
                                           duration-200
                                         `}
-                                        onClick={onClose}
-                                    >
-                                        {label}
-                                    </Link>
-                                </li>
-                            ))}
-                        </ul>
+                                            onClick={onClose}
+                                        >
+                                            {label}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+
+                        {pathname.includes('/training') && (
+                            <ul className="space-y-3 text-white text-xl">
+                                {trainingNavItems.map(({ id, label }) => (
+                                    <li key={id}>
+                                        <Link
+                                            href={`#${id}`}
+                                            className={`
+                                          block
+                                          transition-opacity
+                                          duration-200
+                                        `}
+                                            onClick={onClose}
+                                        >
+                                            {label}
+                                        </Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
                     </nav>
                 </div>
 

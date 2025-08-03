@@ -70,6 +70,7 @@ const RaceStart: FC<Props> = ({ race }) => {
             <Link
                 href={race.regBtnUrl ?? '#'}
                 className="max-xl:rounded-xl rounded-2xl bg-[#ea0029] max-xl:text-base max-2xl:text-xl text-2xl text-white font-semibold max-xl:px-14 max-xl:py-3 max-2xl:px-16 max-2xl:py-4 px-18 py-5 hover:bg-[#d10026] transition-colors duration-300"
+                target="_blank"
             >
                 Регистрация
             </Link>
