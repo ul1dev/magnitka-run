@@ -1,8 +1,9 @@
 export interface Race {
     id: string;
-    title?: string;
+    cardTitle?: string;
+    cardDates?: string;
+    title: string;
     description: string;
-    dates?: string;
     isRegBtn?: boolean;
     regBtnUrl?: string;
     regBtnTextColor?: string;
@@ -13,14 +14,14 @@ export interface Race {
     moreBtnBgColor?: string;
     moreBtnBorderColor?: string;
     bgColor?: string;
-    bgImg?: string;
+    cardBgImg?: string;
     btnsPosition?:
         | 'top-left'
         | 'top-right'
         | 'bottom-left'
         | 'bottom-right'
         | 'center';
-    date: Date;
+    date: string;
     mainBgImg?: string;
     mainBgColor?: string;
     mainTextColor?: string;
@@ -28,13 +29,10 @@ export interface Race {
     datesNumsText?: string;
     datesMonthText?: string;
     aboutImgs?: string[];
-    dateAndPlaceImgs?: string[];
     dateAndPlaceText: string;
-    participantPackages?: {
-        imgs: string[];
-        description?: string;
-    }[];
+    participantPackageText?: string;
+    participantPackageImgs?: string[];
     routesImgs?: string[];
     routesText?: string;
-    partners?: { img: string; categoryText: string }[];
+    partners?: { img: string; categoryText: string; link?: string }[];
 }

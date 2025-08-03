@@ -6,6 +6,7 @@ import { Race } from './types';
 import { FC } from 'react';
 import classNames from 'classnames';
 import { useRouter } from 'next/navigation';
+import { formatTextToHtml } from '@/assets/format-text-to-html';
 
 interface Props {
     item: Race;
@@ -16,8 +17,8 @@ const RaceCard: FC<Props> = ({ item }) => {
 
     const {
         id,
-        title,
-        dates,
+        cardTitle,
+        cardDates,
         isRegBtn,
         regBtnUrl,
         regBtnTextColor,
@@ -28,7 +29,7 @@ const RaceCard: FC<Props> = ({ item }) => {
         moreBtnBgColor,
         moreBtnBorderColor,
         bgColor,
-        bgImg,
+        cardBgImg,
         btnsPosition,
     } = item;
 
@@ -52,7 +53,7 @@ const RaceCard: FC<Props> = ({ item }) => {
                 }
             )}
             style={{
-                backgroundImage: `url(${bgImg})`,
+                backgroundImage: `url(${cardBgImg})`,
                 backgroundColor: bgColor,
             }}
             onClick={handleClick}
@@ -60,8 +61,8 @@ const RaceCard: FC<Props> = ({ item }) => {
             <div
                 className={classNames('flex h-full', {
                     'justify-between py-24 px-16 max-2xl:py-16 max-xl:px-8 max-lg:py-24 max-lg:px-16 max-md:py-16 max-md:px-8 max-sm:flex-col max-sm:py-8 max-[550px]:!px-4 max-[550px]:!py-6 max-[500px]:!pt-8 max-[500px]:!pb-4':
-                        title,
-                    'h-full p-6 max-[500px]:p-4 max-[400px]:p-3': !title,
+                        cardTitle,
+                    'h-full p-6 max-[500px]:p-4 max-[400px]:p-3': !cardTitle,
                     'justify-end': xPos === 'right',
                     'justify-start': xPos === 'left',
                     'items-start': yPos === 'top',
@@ -71,19 +72,19 @@ const RaceCard: FC<Props> = ({ item }) => {
                 })}
             >
                 <div className="uppercase text-white font-extrabold">
-                    {title && (
+                    {cardTitle && (
                         <h3
                             className="text-5xl max-[1900px]:text-[38px] max-[1700px]:text-3xl max-[1400px]:text-2xl max-xl:text-xl max-lg:text-4xl max-[850px]:!text-3xl max-[550px]:!text-2xl max-[550px]:leading-6 max-[500px]:!text-xl"
                             dangerouslySetInnerHTML={{
-                                __html: title.replace(/\n/g, '<br />'),
+                                __html: formatTextToHtml(cardTitle),
                             }}
                         ></h3>
                     )}
-                    {dates && (
+                    {cardDates && (
                         <p
                             className="mt-2 text-4xl max-[1900px]:text-3xl max-[1700px]:text-2xl max-[1400px]:text-xl max-xl:text-lg max-lg:text-3xl max-[850px]:!text-2xl max-[550px]:!text-xl max-[550px]:leading-5 max-[500px]:!text-lg"
                             dangerouslySetInnerHTML={{
-                                __html: dates.replace(/\n/g, '<br />'),
+                                __html: formatTextToHtml(cardDates),
                             }}
                         ></p>
                     )}
@@ -93,7 +94,7 @@ const RaceCard: FC<Props> = ({ item }) => {
                     className={classNames(
                         'flex sm:flex-col gap-3 max-[500px]:gap-1.5 max-[400px]:gap-1',
                         {
-                            'max-sm:mt-6': title,
+                            'max-sm:mt-6': cardTitle,
                         }
                     )}
                 >
@@ -103,7 +104,7 @@ const RaceCard: FC<Props> = ({ item }) => {
                                 borderColor={regBtnBorderColor}
                                 textColor={regBtnTextColor}
                                 bgColor={regBtnBgColor}
-                                isBigOnSm={Boolean(title)}
+                                isBigOnSm={Boolean(cardTitle)}
                             >
                                 Регистрация
                             </CardBtn>
@@ -116,7 +117,7 @@ const RaceCard: FC<Props> = ({ item }) => {
                                 borderColor={moreBtnBorderColor}
                                 textColor={moreBtnTextColor}
                                 bgColor={moreBtnBgColor}
-                                isBigOnSm={Boolean(title)}
+                                isBigOnSm={Boolean(cardTitle)}
                             >
                                 Подробнее
                             </CardBtn>

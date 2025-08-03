@@ -20,6 +20,13 @@ export default function MobileMenu({ isOpen, onClose }: Props) {
         { href: '/shop', label: 'Магазин' },
     ];
 
+    const raceNavItems = [
+        { id: 'about', label: 'О забеге' },
+        { id: 'participants', label: 'Участникам' },
+        { id: 'volunteers', label: 'Волонтерам' },
+        { id: 'contacts', label: 'Контакты' },
+    ];
+
     return (
         <div
             className={`fixed inset-0 z-[100] flex ${
@@ -69,26 +76,50 @@ export default function MobileMenu({ isOpen, onClose }: Props) {
                     </button>
                 </div>
 
-                <nav className="px-6 py-2 flex-1">
-                    <ul className="space-y-3 text-white text-xl">
-                        {navItems.map(({ href, label }) => (
-                            <li key={href}>
-                                <Link
-                                    href={href}
-                                    className={`
-                    block
-                    transition-opacity
-                    duration-200
-                    ${pathname === href ? 'opacity-70' : 'opacity-100'}
-                  `}
-                                    onClick={onClose}
-                                >
-                                    {label}
-                                </Link>
-                            </li>
-                        ))}
-                    </ul>
-                </nav>
+                <div className="flex-1 px-6 py-2">
+                    <nav className="flex flex-col gap-10">
+                        <ul className="space-y-3 text-white text-xl">
+                            {navItems.map(({ href, label }) => (
+                                <li key={href}>
+                                    <Link
+                                        href={href}
+                                        className={`
+                                          block
+                                          transition-opacity
+                                          duration-200
+                                          ${
+                                              pathname === href
+                                                  ? 'opacity-70'
+                                                  : 'opacity-100'
+                                          }
+                                        `}
+                                        onClick={onClose}
+                                    >
+                                        {label}
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+
+                        <ul className="space-y-3 text-white text-xl">
+                            {raceNavItems.map(({ id, label }) => (
+                                <li key={id}>
+                                    <Link
+                                        href={`#${id}`}
+                                        className={`
+                                          block
+                                          transition-opacity
+                                          duration-200
+                                        `}
+                                        onClick={onClose}
+                                    >
+                                        {label}
+                                    </Link>
+                                </li>
+                            ))}
+                        </ul>
+                    </nav>
+                </div>
 
                 <div className="px-6 pb-6">
                     <div className="flex mb-5 gap-5">

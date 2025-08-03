@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@fancyapps/ui": "^6.0.19",
     "animate.css": "^4.1.1",
     "classnames": "^2.5.1",
     "next": "15.4.4",

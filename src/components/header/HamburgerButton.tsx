@@ -24,7 +24,7 @@ export default function HamburgerButton({ onClick, className }: Props) {
                     hover ? styles.middleEnter : styles.middleLeave
                 }`}
             />
-            <span className={`${styles.line}`} />
+            <span className={styles.line} />
         </button>
     );
 }
