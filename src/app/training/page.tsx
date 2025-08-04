@@ -1,3 +1,4 @@
+import TrainingFAQ from '@/components/training/FAQ';
 import TrainingStart from '@/components/training/Start';
 import TrainingTrainings from '@/components/training/Trainings';
 import { Metadata } from 'next';
@@ -11,6 +12,7 @@ export default function Training() {
         <>
             <TrainingStart />
             <TrainingTrainings />
+            <TrainingFAQ />
         </>
     );
 }

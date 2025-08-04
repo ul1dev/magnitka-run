@@ -34,7 +34,10 @@ const RaceInfoPartners: FC<Props> = ({ race }) => {
     }, [race.partners]);
 
     return (
-        <section className="scroll-mt-34" id="partners">
+        <section
+            className="scroll-mt-34 max-xl:scroll-mt-28 max-lg:scroll-mt-24 max-sm:scroll-mt-20"
+            id="partners"
+        >
             <h2 className="font-extrabold text-3xl mb-4 max-sm:text-2xl max-sm:mb-3">
                 Партнёры
             </h2>

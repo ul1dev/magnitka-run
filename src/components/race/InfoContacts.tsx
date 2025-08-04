@@ -5,7 +5,10 @@ import { FC } from 'react';
 
 const RaceInfoContacts: FC = () => {
     return (
-        <section className="scroll-mt-34" id="contacts">
+        <section
+            className="scroll-mt-34 max-xl:scroll-mt-28 max-lg:scroll-mt-24 max-sm:scroll-mt-20"
+            id="contacts"
+        >
             <h2 className="font-extrabold text-3xl mb-4 max-sm:text-2xl max-sm:mb-3">
                 Контакты
             </h2>

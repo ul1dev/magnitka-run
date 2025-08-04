@@ -21,7 +21,10 @@ const RaceInfoParticipants: FC<Props> = ({ race }) => {
     }, []);
 
     return (
-        <section className="scroll-mt-34" id="participants">
+        <section
+            className="scroll-mt-34 max-xl:scroll-mt-28 max-lg:scroll-mt-24 max-sm:scroll-mt-20"
+            id="participants"
+        >
             <h2 className="font-extrabold text-3xl mb-4 max-sm:text-2xl max-sm:mb-3">
                 Участникам
             </h2>
