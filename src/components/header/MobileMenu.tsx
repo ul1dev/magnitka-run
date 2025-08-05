@@ -127,25 +127,26 @@ export default function MobileMenu({ isOpen, onClose }: Props) {
                             </ul>
                         )}
 
-                        {pathname.includes('/training') && (
-                            <ul className="space-y-3 text-white text-xl">
-                                {trainingNavItems.map(({ id, label }) => (
-                                    <li key={id}>
-                                        <Link
-                                            href={`#${id}`}
-                                            className={`
+                        {pathname.includes('/training') &&
+                            !pathname.includes('/training/') && (
+                                <ul className="space-y-3 text-white text-xl">
+                                    {trainingNavItems.map(({ id, label }) => (
+                                        <li key={id}>
+                                            <Link
+                                                href={`#${id}`}
+                                                className={`
                                           block
                                           transition-opacity
                                           duration-200
                                         `}
-                                            onClick={onClose}
-                                        >
-                                            {label}
-                                        </Link>
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
+                                                onClick={onClose}
+                                            >
+                                                {label}
+                                            </Link>
+                                        </li>
+                                    ))}
+                                </ul>
+                            )}
                     </nav>
                 </div>
 
