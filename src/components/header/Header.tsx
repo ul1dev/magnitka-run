@@ -30,7 +30,7 @@ const Header = () => {
                         className="max-lg:w-14 max-xl:w-18 max-2xl:w-20 w-22"
                     />
                 </Link>
-                <ul className="max-lg:hidden flex gap-6 max-xl:text-sm max-2xl:text-base text-lg -mr-28">
+                <ul className="text-black max-lg:hidden flex gap-6 max-xl:text-sm max-2xl:text-base text-lg -mr-28">
                     <Link href="/">
                         <li>Наши забеги</li>
                     </Link>
