@@ -19,6 +19,9 @@ const cartSlice = createSlice({
     name: 'cart',
     initialState,
     reducers: {
+        hydrateFromStorage(state, action: PayloadAction<CartItem[]>) {
+            state.items = action.payload;
+        },
         addItem(state, action: PayloadAction<CartItem>) {
             let isItemInCart = false;
             let oldCount = 0;
@@ -65,5 +68,6 @@ const cartSlice = createSlice({
     },
 });
 
-export const { addItem, removeItem, clearCart } = cartSlice.actions;
+export const { addItem, removeItem, clearCart, hydrateFromStorage } =
+    cartSlice.actions;
 export default cartSlice.reducer;

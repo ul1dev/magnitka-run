@@ -76,7 +76,7 @@ export default async function ShopProductsItem({ params: { id } }: PageProps) {
                 >
                     <path d="M4.5.5L1 4m0 0l3.5 3.5M1 4h12" stroke="#000000" />
                 </svg>
-                Назад
+                К товарам
             </Link>
             <p className="text-xs max-sm:text-[10px] text-gray-400">
                 Артикул {product.article}

@@ -1,3 +1,5 @@
+import CartBar from '@/components/cart/CartBar';
+import CartProducts from '@/components/cart/CartProducts';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -10,6 +12,14 @@ export default async function ShopCart() {
             <h1 className="text-4xl max-sm:text-3xl font-bold mb-8 max-lg:mb-4 max-sm:mb-2">
                 Корзина
             </h1>
+            <div className="flex max-md:flex-col gap-10 max-lg:gap-4">
+                <div className="w-full">
+                    <CartProducts />
+                </div>
+                <div className="min-w-xs">
+                    <CartBar />
+                </div>
+            </div>
         </main>
     );
 }
