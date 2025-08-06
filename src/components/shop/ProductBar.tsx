@@ -11,8 +11,7 @@ interface Props {
 }
 
 export default function ProductBar({ product }: Props) {
-    const { price, discountProcent, description, sizesTitle, sizes } =
-        product;
+    const { price, discountProcent, description, sizesTitle, sizes } = product;
     const [selectedSize, setSelectedSize] = useState<string | null>(null);
     const { addItem } = useCart();
 
@@ -35,6 +34,7 @@ export default function ProductBar({ product }: Props) {
         const item: CartItem = {
             product,
             size: selectedSize,
+            count: 1,
         };
 
         addItem(item);
