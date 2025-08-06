@@ -44,7 +44,13 @@ export default function ProductBar({
                     </span>
                 </div>
             )}
-            <p className="mt-4 max-lg:text-sm">{description}</p>
+            <p
+                className={`max-lg:text-sm ${
+                    discountProcent ? 'mt-4' : 'mt-2'
+                }`}
+            >
+                {description}
+            </p>
 
             <div className="mt-3">
                 <p className="font-bold text-sm">Выберите {sizesTitle}</p>
