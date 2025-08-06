@@ -3,15 +3,18 @@
 import classNames from 'classnames';
 import { ShopProduct } from './types';
 import { useState } from 'react';
+import { useCart } from '@/store/useCart';
+import type { CartItem } from '@/store/cartSlice';
 
 interface Props {
     product: ShopProduct;
 }
 
-export default function ProductBar({
-    product: { price, discountProcent, description, sizesTitle, sizes },
-}: Props) {
+export default function ProductBar({ product }: Props) {
+    const { price, discountProcent, description, sizesTitle, sizes } =
+        product;
     const [selectedSize, setSelectedSize] = useState<string | null>(null);
+    const { addItem } = useCart();
 
     const finalPrice = discountProcent
         ? Math.ceil((price * (100 - discountProcent)) / 100)
@@ -26,7 +29,16 @@ export default function ProductBar({
         setSelectedSize(size.value);
     };
 
-    const handleAddToCart = () => {};
+    const handleAddToCart = () => {
+        if (!selectedSize) return;
+
+        const item: CartItem = {
+            product,
+            size: selectedSize,
+        };
+
+        addItem(item);
+    };
 
     return (
         <div className="border-1 border-[#EEEEEE] p-8 max-lg:p-4 rounded-lg">

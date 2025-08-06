@@ -7,9 +7,11 @@ import Link from 'next/link';
 import HamburgerButton from './HamburgerButton';
 import { useEffect, useState } from 'react';
 import MobileMenu from './MobileMenu';
+import { useCart } from '@/store/useCart';
 
 const Header = () => {
     const [menuOpen, setMenuOpen] = useState(false);
+    const { items } = useCart();
 
     useEffect(() => {
         document.body.style.overflow = menuOpen ? 'hidden' : '';
@@ -38,7 +40,9 @@ const Header = () => {
                         <li>Беговая подготовка</li>
                     </Link>
                     <Link href="/shop">
-                        <li>Магазин</li>
+                        <li>
+                            Магазин{items.length ? ` (${items.length})` : ''}
+                        </li>
                     </Link>
                 </ul>
                 <Link

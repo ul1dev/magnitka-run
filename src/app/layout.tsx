@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './styles/globals.scss';
 import Header from '@/components/header/Header';
 import Footer from '@/components/footer/Footer';
+import { Providers } from './providers';
 
 export const metadata: Metadata = {
     title: 'Беговое сообщество - Азия-Европа в Магнитогорске',
@@ -47,11 +48,13 @@ export default function RootLayout({
                 />
             </head>
             <body className="min-w-xs max-w-[2300px] mx-auto">
-                <Header />
+                <Providers>
+                    <Header />
 
-                <main>{children}</main>
+                    <main>{children}</main>
 
-                <Footer />
+                    <Footer />
+                </Providers>
             </body>
         </html>
     );
