@@ -26,6 +26,8 @@ export default function ProductBar({
         setSelectedSize(size.value);
     };
 
+    const handleAddToCart = () => {};
+
     return (
         <div className="border-1 border-[#EEEEEE] p-8 max-lg:p-4 rounded-lg">
             <p className="font-bold text-3xl max-lg:text-2xl">{finalPrice} ₽</p>
@@ -76,6 +78,7 @@ export default function ProductBar({
                         'bg-gray-300': !selectedSize,
                     }
                 )}
+                onClick={handleAddToCart}
             >
                 Добавить в корзину
             </button>

@@ -2,6 +2,7 @@ import ProductBar from '@/components/shop/ProductBar';
 import ProductGalary from '@/components/shop/ProductGalary';
 import ProductInfo from '@/components/shop/ProductInfo';
 import { Metadata } from 'next';
+import Link from 'next/link';
 
 interface PageProps {
     params: {
@@ -63,6 +64,20 @@ export default async function ShopProductsItem({ params: { id } }: PageProps) {
 
     return (
         <main className="mt-40 max-2xl:mt-34 max-xl:mt-30 max-lg:mt-26 max-sm:mt-24 mb-20 max-2xl:mb-12 max-xl:mb-10 max-lg:mb-8 max-sm:mb-6 max-w-5xl mx-auto max-[1100px]:mx-10 max-lg:mx-7 max-sm:mx-5 max-[450px]:!mx-3">
+            <Link
+                href="/shop"
+                className="flex gap-2 max-lg:gap-1 items-center mb-3 max-lg:text-sm"
+            >
+                <svg
+                    width="13"
+                    height="8"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                >
+                    <path d="M4.5.5L1 4m0 0l3.5 3.5M1 4h12" stroke="#000000" />
+                </svg>
+                Назад
+            </Link>
             <p className="text-xs max-sm:text-[10px] text-gray-400">
                 Артикул {product.article}
             </p>
