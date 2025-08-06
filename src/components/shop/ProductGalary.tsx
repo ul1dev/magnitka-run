@@ -82,7 +82,7 @@ export default function ProductGallery({ imgs }: Props) {
                         <img
                             src={src}
                             alt={`Slide ${i + 1}`}
-                            className="w-full h-128 max-lg:h-96 max-md:h-78 max-sm:h-96 max-[400px]:!h-88 object-cover rounded-lg"
+                            className="w-full h-128 max-lg:h-96 max-md:h-120 max-sm:h-96 max-[400px]:!h-88 object-cover rounded-lg"
                         />
                     </Link>
                 </div>

@@ -1,5 +1,6 @@
 import ProductBar from '@/components/shop/ProductBar';
 import ProductGalary from '@/components/shop/ProductGalary';
+import ProductInfo from '@/components/shop/ProductInfo';
 import { Metadata } from 'next';
 
 interface PageProps {
@@ -50,7 +51,11 @@ export default async function ShopProductsItem({ params: { id } }: PageProps) {
         description:
             'Рюкзак Московский Марафон x GOSHA OREKHOV BAGS, модель Technic Rolltop M с продуманным кроем и функционалом. В нём сочетается аутентичность локального бренда и внимание к качеству каждой детали. Производство — Санкт-Петербург.',
         sizesTitle: 'цвет',
-        sizes: [{ isUnavailable: false, value: '' }],
+        sizes: [
+            { isUnavailable: false, value: 'Черный' },
+            { isUnavailable: false, value: 'Желтый' },
+            { isUnavailable: true, value: 'Красный' },
+        ],
         createdAt: '2025-08-05T12:03:18.154Z',
         updatedAt: '2025-08-05T12:03:18.154Z',
         discountProcent: 10,
@@ -64,14 +69,17 @@ export default async function ShopProductsItem({ params: { id } }: PageProps) {
             <h1 className="text-4xl max-lg:text-3xl max-sm:text-2xl max-[450px]:!text-xl font-bold mb-8 max-lg:mb-4 max-sm:mb-2 mt-1">
                 {product.title}
             </h1>
-
-            <div className="flex max-sm:flex-col gap-10 max-lg:gap-4">
+            <div className="flex max-md:flex-col gap-10 max-lg:gap-4">
                 <div className="w-full">
                     <ProductGalary imgs={product.imgs} />
                 </div>
                 <div className="w-full">
                     <ProductBar product={product} />
                 </div>
+            </div>
+
+            <div className="mt-10 max-sm:mt-8">
+                <ProductInfo product={product} />
             </div>
         </main>
     );
