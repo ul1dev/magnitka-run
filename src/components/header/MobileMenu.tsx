@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import TelegramIcon from '@/components/icons/TelegramIcon';
 import VKIcon from '@/components/icons/VKIcon';
 import ChatIcon from '@/components/icons/ChatIcon';
+import { useCart } from '@/store/useCart';
 
 type Props = {
     isOpen: boolean;
@@ -13,6 +14,8 @@ type Props = {
 
 export default function MobileMenu({ isOpen, onClose }: Props) {
     const pathname = usePathname();
+
+    const { itemsLength } = useCart();
 
     const navItems = [
         { href: '/', label: 'Забеги' },
@@ -148,7 +151,7 @@ export default function MobileMenu({ isOpen, onClose }: Props) {
                                 </ul>
                             )}
 
-                        {pathname.includes('/shop') && (
+                        {pathname.includes('/shop') && itemsLength > 0 && (
                             <ul className="space-y-3 text-white text-xl">
                                 <li>
                                     <Link
