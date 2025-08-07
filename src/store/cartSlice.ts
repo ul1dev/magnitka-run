@@ -62,12 +62,42 @@ const cartSlice = createSlice({
                     )
             );
         },
+        incItemCount(
+            state,
+            action: PayloadAction<{ id: string; size: string }>
+        ) {
+            state.items = state.items.map((item) =>
+                item.product.id === action.payload.id &&
+                item.size === action.payload.size
+                    ? { ...item, count: item.count + 1 }
+                    : item
+            );
+        },
+        decItemCount(
+            state,
+            action: PayloadAction<{ id: string; size: string }>
+        ) {
+            state.items = state.items
+                .map((item) =>
+                    item.product.id === action.payload.id &&
+                    item.size === action.payload.size
+                        ? { ...item, count: item.count - 1 }
+                        : item
+                )
+                .filter((item) => item.count > 0);
+        },
         clearCart(state) {
             state.items = [];
         },
     },
 });
 
-export const { addItem, removeItem, clearCart, hydrateFromStorage } =
-    cartSlice.actions;
+export const {
+    addItem,
+    removeItem,
+    clearCart,
+    hydrateFromStorage,
+    incItemCount,
+    decItemCount,
+} = cartSlice.actions;
 export default cartSlice.reducer;

@@ -29,11 +29,11 @@ export default function ProductBar({ product }: Props) {
     };
 
     const handleAddToCart = () => {
-        if (!selectedSize) return;
+        if (!selectedSize && sizes) return;
 
         const item: CartItem = {
             product,
-            size: selectedSize,
+            size: selectedSize ?? 'without-size',
             count: 1,
         };
 
@@ -64,36 +64,38 @@ export default function ProductBar({ product }: Props) {
                 {description}
             </p>
 
-            <div className="mt-3">
-                <p className="font-bold text-sm">Выберите {sizesTitle}</p>
-                <div className="flex flex-wrap gap-2 max-sm:gap-1.5 mt-1">
-                    {sizes?.map((size, i) => (
-                        <div
-                            key={i}
-                            className={classNames(
-                                'uppercase font-bold cursor-pointer rounded pt-1.5 pb-0.5 px-4 max-sm:text-sm max-sm:pt-2.5 max-sm:pb-2 max-sm:leading-3',
-                                {
-                                    'opacity-50': size.isUnavailable,
-                                    'bg-[#003593] text-white shadow-md':
-                                        selectedSize === size.value,
-                                    'bg-blue-100 text-black':
-                                        selectedSize !== size.value,
-                                }
-                            )}
-                            onClick={() => handleSelectSize(size)}
-                        >
-                            {size.value}
-                        </div>
-                    ))}
+            {sizes && (
+                <div className="mt-3">
+                    <p className="font-bold text-sm">Выберите {sizesTitle}</p>
+                    <div className="flex flex-wrap gap-2 max-sm:gap-1.5 mt-1">
+                        {sizes?.map((size, i) => (
+                            <div
+                                key={i}
+                                className={classNames(
+                                    'uppercase font-bold cursor-pointer rounded pt-1.5 pb-0.5 px-4 max-sm:text-sm max-sm:pt-2.5 max-sm:pb-2 max-sm:leading-3',
+                                    {
+                                        'opacity-50': size.isUnavailable,
+                                        'bg-[#003593] text-white shadow-md':
+                                            selectedSize === size.value,
+                                        'bg-blue-100 text-black':
+                                            selectedSize !== size.value,
+                                    }
+                                )}
+                                onClick={() => handleSelectSize(size)}
+                            >
+                                {size.value}
+                            </div>
+                        ))}
+                    </div>
                 </div>
-            </div>
+            )}
 
             <button
                 className={classNames(
                     'mt-8 w-full cursor-pointer text-white max-lg:py-3 py-4 rounded font-bold text-xl max-lg:text-lg',
                     {
-                        'bg-[#003593]': selectedSize,
-                        'bg-gray-300': !selectedSize,
+                        'bg-[#003593]': selectedSize || !sizes,
+                        'bg-gray-300': !selectedSize && sizes,
                     }
                 )}
                 onClick={handleAddToCart}

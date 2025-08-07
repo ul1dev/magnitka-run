@@ -3,7 +3,12 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
     /* другие опции конфига */
     images: {
-        domains: ['wnmarathon.runc.run', 'runc.run', 'res.cloudinary.com'], // разрешаем подгружать изображения с этого хоста
+        domains: [
+            'wnmarathon.runc.run',
+            'runc.run',
+            'res.cloudinary.com',
+            'shop.runc.run',
+        ], // разрешаем подгружать изображения с этого хоста
         // или, если нужен более гибкий контроль:
         // remotePatterns: [
         //     {

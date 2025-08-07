@@ -147,6 +147,24 @@ export default function MobileMenu({ isOpen, onClose }: Props) {
                                     ))}
                                 </ul>
                             )}
+
+                        {pathname.includes('/shop') && (
+                            <ul className="space-y-3 text-white text-xl">
+                                <li>
+                                    <Link
+                                        href="/shop/cart"
+                                        className={`
+                                          block
+                                          transition-opacity
+                                          duration-200
+                                        `}
+                                        onClick={onClose}
+                                    >
+                                        Корзина
+                                    </Link>
+                                </li>
+                            </ul>
+                        )}
                     </nav>
                 </div>
 

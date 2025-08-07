@@ -1,4 +1,10 @@
-import { addItem, clearCart, removeItem } from './cartSlice';
+import {
+    addItem,
+    clearCart,
+    decItemCount,
+    incItemCount,
+    removeItem,
+} from './cartSlice';
 import type { CartItem } from './cartSlice';
 import { useAppDispatch, useAppSelector } from './hooks';
 
@@ -8,30 +14,35 @@ export const useCart = () => {
 
     let itemsLength = 0;
     let totalPrice = 0;
-    let totalDiscount = 0;
+    let totalDiscountAmount = 0; // <-- в рублях
 
     for (let item of items) {
-        itemsLength += item.count;
-        totalPrice += item.product.price;
+        const { price, discountProcent = 0 } = item.product;
 
-        if (item.product.discountProcent) {
-            totalDiscount += item.product.discountProcent;
-        }
+        itemsLength += item.count;
+        const lineTotal = price * item.count;
+        totalPrice += lineTotal;
+
+        // вычисляем скидку именно по этому товару
+        totalDiscountAmount += (lineTotal * discountProcent) / 100;
     }
 
-    const totalPriceWithDiscount = Math.ceil(
-        (totalPrice * (100 - totalDiscount)) / 100
-    );
+    // цена после всех скидок
+    const totalPriceWithDiscount = Math.ceil(totalPrice - totalDiscountAmount);
 
     return {
         items,
         itemsLength,
         totalPrice,
-        totalDiscount,
+        totalDiscountAmount,
         totalPriceWithDiscount,
         addItem: (item: CartItem) => dispatch(addItem(item)),
         removeItem: (id: string, size: string) =>
             dispatch(removeItem({ id, size })),
+        incItemCount: (id: string, size: string) =>
+            dispatch(incItemCount({ id, size })),
+        decItemCount: (id: string, size: string) =>
+            dispatch(decItemCount({ id, size })),
         clearCart: () => dispatch(clearCart()),
     };
 };

@@ -1,10 +1,8 @@
 'use client';
 
 import { useCart } from '@/store/useCart';
-import classNames from 'classnames';
-import Link from 'next/link';
 
-export default function CartBar() {
+export default function CheckoutBar() {
     const {
         itemsLength,
         totalPrice,
@@ -35,18 +33,12 @@ export default function CartBar() {
                 </div>
             </div>
 
-            <Link
-                className={classNames(
-                    'block text-center w-full cursor-pointer text-white max-lg:py-3 py-4 rounded-b-lg font-bold text-xl max-lg:text-lg',
-                    {
-                        'bg-[#003593]': itemsLength,
-                        'bg-gray-300': !itemsLength,
-                    }
-                )}
-                href={itemsLength ? '/shop/checkout' : '/shop'}
+            <button
+                className="text-center w-full cursor-pointer text-white max-lg:py-3 py-4 rounded-b-lg font-bold text-xl max-lg:text-lg bg-[#003593]"
+                type="submit"
             >
-                К оформлению
-            </Link>
+                Оплатить
+            </button>
         </div>
     );
 }
