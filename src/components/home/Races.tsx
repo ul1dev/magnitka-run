@@ -5,6 +5,7 @@ import { Race } from './types';
 import { FC } from 'react';
 import RaceCard from './RaceCard';
 import CardBtn from './CardBtn';
+import Link from 'next/link';
 
 interface Props {
     items: Race[];
@@ -46,9 +47,17 @@ const HomeRaces: FC<Props> = ({ items }) => {
                         </div>
 
                         <div className="flex w-full justify-end">
-                            <CardBtn borderColor="#FFFFFF" textColor="#FFFFFF">
-                                Подписаться
-                            </CardBtn>
+                            <Link
+                                href="https://t.me/Asiaeuropemgn"
+                                target="_blank"
+                            >
+                                <CardBtn
+                                    borderColor="#FFFFFF"
+                                    textColor="#FFFFFF"
+                                >
+                                    Подписаться
+                                </CardBtn>
+                            </Link>
                         </div>
                     </div>
                 )}
