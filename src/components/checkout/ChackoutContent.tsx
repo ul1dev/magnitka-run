@@ -24,7 +24,7 @@ export default function ChackoutContent() {
         mode: 'onTouched',
         defaultValues: { deliveryMethod: 'self-pickup' },
     });
-    const { clearCart, itemsLength } = useCart();
+    const { clearCart, items, itemsLength } = useCart();
 
     const router = useRouter();
 
@@ -39,7 +39,15 @@ export default function ChackoutContent() {
     }, []);
 
     const onSubmit: SubmitHandler<CCFormValues> = (data) => {
-        console.log('Submitted:', data);
+        console.log(
+            'Submitted:',
+            data,
+            items.map((item) => ({
+                id: item.product.id,
+                count: item.count,
+                size: item.size,
+            }))
+        );
 
         const isSuccess = true;
 
