@@ -12,7 +12,15 @@ export default function CartProducts() {
         <div className="flex flex-col gap-4">
             {items.map(
                 ({
-                    product: { id, imgs, title, price, sizesTitle, sizes },
+                    product: {
+                        id,
+                        imgs,
+                        title,
+                        price,
+                        sizesTitle,
+                        sizes,
+                        discountProcent = 0,
+                    },
                     count,
                     size,
                 }) => (
@@ -67,8 +75,13 @@ export default function CartProducts() {
                                     +
                                 </p>
                             </div>
+
                             <p className="font-bold text-xl">
-                                {price * count} ₽
+                                {Math.ceil(
+                                    ((price * (100 - discountProcent)) / 100) *
+                                        count
+                                )}{' '}
+                                ₽
                             </p>
 
                             <div
