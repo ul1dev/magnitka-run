@@ -28,13 +28,13 @@ const TrainingTrainingsPacemakers: FC<Props> = ({ pacemakers }) => {
                             <Image
                                 src={pacemaker.img}
                                 alt={`pacemaker-${i}`}
-                                className="w-1/2 max-[500px]:w-full rounded-lg"
+                                className="w-1/2 max-[500px]:w-full rounded-lg mb-5 max-sm:mb-4"
                                 width={200}
                                 height={200}
                             />
                         )}
 
-                        <h3 className="text-2xl max-sm:text-xl font-semibold mb-2 max-sm:mb-1 mt-5 max-sm:mt-4">
+                        <h3 className="text-2xl max-sm:text-xl font-semibold mb-2 max-sm:mb-1">
                             {pacemaker.name}
                         </h3>
                         <div
