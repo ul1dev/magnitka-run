@@ -20,7 +20,7 @@ const RaceInfoAbout: FC<Props> = ({ race }) => {
                 О забеге
             </h2>
             <div className="flex flex-col gap-5 max-sm:gap-3">
-                <div className="border-1 border-[#EEEEEE] p-8 max-sm:p-4 rounded-lg">
+                <div className="border border-[#EEEEEE] p-8 max-sm:p-4 rounded-lg">
                     <h3 className="text-xl max-sm:text-lg font-semibold mb-4 max-sm:mb-3">
                         {race.title}
                     </h3>

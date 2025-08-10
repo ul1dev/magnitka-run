@@ -91,7 +91,7 @@ const RaceStart: FC<Props> = ({ race }) => {
                     </p>
                 </div>
                 <div
-                    className={`rounded-2xl max-xl:rounded-xl p-4 max-xl:p-3 max-md:p-2 max-[450px]:!p-1 border-2 max-2xl:border-1`}
+                    className={`rounded-2xl max-xl:rounded-xl p-4 max-xl:p-3 max-md:p-2 max-[450px]:!p-1 border-2 max-2xl:border`}
                     style={{
                         borderColor: race.mainTextColor,
                         color: race.mainTextColor,

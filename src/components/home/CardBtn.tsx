@@ -28,7 +28,7 @@ const CardBtn: FC<Props> = ({
                 max-lg:text-2xl max-lg:py-3 max-lg:px-16 max-lg:min-w-62
                 max-md:text-xl max-md:py-2 max-md:px-12 max-md:min-w-50`,
                 {
-                    'border-2 max-2xl:border-1': borderColor,
+                    'border-2 max-2xl:border': borderColor,
                     [`max-sm:text-xl max-sm:py-3 max-sm:px-4 max-sm:w-full max-sm:min-w-20
                       max-[550px]:!text-lg max-[550px]:!py-2
                       max-[500px]:!text-base max-[500px]:!py-1.5`]: isBigOnSm,

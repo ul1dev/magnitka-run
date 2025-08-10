@@ -8,6 +8,9 @@ const nextConfig: NextConfig = {
             'runc.run',
             'res.cloudinary.com',
             'shop.runc.run',
+            'localhost',
+            'магниткабежит.рф',
+            'xn--80aadgmgkenqn5dg.xn--p1ai',
         ], // разрешаем подгружать изображения с этого хоста
         // или, если нужен более гибкий контроль:
         // remotePatterns: [

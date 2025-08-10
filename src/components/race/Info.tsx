@@ -32,7 +32,7 @@ const RaceInfo: FC<Props> = ({ race }) => {
     return (
         <div className="flex max-w-6xl mx-auto p-10 max-sm:p-5 max-[450px]:!px-2">
             <nav className="w-1/3 pr-8 max-lg:hidden">
-                <ul className="sticky top-34 border-1 rounded-lg border-[#EEEEEE]">
+                <ul className="sticky top-34 border rounded-lg border-[#EEEEEE]">
                     {navItems.map((item, i) => (
                         <Link
                             key={item.id}

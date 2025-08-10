@@ -13,7 +13,7 @@ const RaceInfoContacts: FC = () => {
                 Контакты
             </h2>
             <div className="flex flex-col gap-5 max-sm:gap-3">
-                <div className="border-1 border-[#EEEEEE] p-8 max-sm:p-4 rounded-lg flex flex-col gap-5 max-sm:gap-3">
+                <div className="border border-[#EEEEEE] p-8 max-sm:p-4 rounded-lg flex flex-col gap-5 max-sm:gap-3">
                     <div>
                         <h3 className="text-xl font-semibold mb-3 max-sm:text-lg max-sm:mb-1">
                             Телефон

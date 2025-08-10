@@ -31,7 +31,7 @@ const RaceInfoParticipants: FC<Props> = ({ race }) => {
 
             <div className="flex flex-col gap-5 max-sm:gap-3">
                 {race.dateAndPlaceText && (
-                    <div className="border-1 border-[#EEEEEE] p-8 max-sm:p-4 rounded-lg">
+                    <div className="border border-[#EEEEEE] p-8 max-sm:p-4 rounded-lg">
                         <h3 className="text-xl max-sm:text-lg font-semibold mb-4 max-sm:mb-3">
                             Дата и место проведения
                         </h3>
@@ -45,7 +45,7 @@ const RaceInfoParticipants: FC<Props> = ({ race }) => {
                 )}
 
                 {(race.routesText || race.routesImgs?.length) && (
-                    <div className="border-1 border-[#EEEEEE] p-8 max-sm:p-4 rounded-lg">
+                    <div className="border border-[#EEEEEE] p-8 max-sm:p-4 rounded-lg">
                         <h3 className="text-xl max-sm:text-lg font-semibold mb-4 max-sm:mb-3">
                             Маршрут
                         </h3>
@@ -88,7 +88,7 @@ const RaceInfoParticipants: FC<Props> = ({ race }) => {
 
                 {(race.participantPackageImgs?.length ||
                     race.participantPackageText) && (
-                    <div className="border-1 border-[#EEEEEE] p-8 max-sm:p-4 rounded-lg">
+                    <div className="border border-[#EEEEEE] p-8 max-sm:p-4 rounded-lg">
                         <h3 className="text-xl max-sm:text-lg font-semibold mb-4 max-sm:mb-3">
                             Пакет участника
                         </h3>
@@ -131,7 +131,7 @@ const RaceInfoParticipants: FC<Props> = ({ race }) => {
                     </div>
                 )}
 
-                <div className="border-1 border-[#EEEEEE] p-8 max-sm:p-4 rounded-lg">
+                <div className="border border-[#EEEEEE] p-8 max-sm:p-4 rounded-lg">
                     <h3 className="text-xl max-sm:text-lg font-semibold mb-4 max-sm:mb-3">
                         Как зарегистрироваться?
                     </h3>
@@ -194,7 +194,7 @@ const RaceInfoParticipants: FC<Props> = ({ race }) => {
                     </ol>
                 </div>
 
-                <div className="border-1 border-[#EEEEEE] p-8 max-sm:p-4 rounded-lg">
+                <div className="border border-[#EEEEEE] p-8 max-sm:p-4 rounded-lg">
                     <h3 className="text-xl max-sm:text-lg font-semibold mb-4 max-sm:mb-3">
                         Организационный взнос
                     </h3>
@@ -206,7 +206,7 @@ const RaceInfoParticipants: FC<Props> = ({ race }) => {
                     </div>
                 </div>
 
-                <div className="border-1 border-[#EEEEEE] p-8 max-sm:p-4 rounded-lg">
+                <div className="border border-[#EEEEEE] p-8 max-sm:p-4 rounded-lg">
                     <h3 className="text-xl max-sm:text-lg font-semibold mb-4 max-sm:mb-3">
                         Условия возврата и переноса
                     </h3>
@@ -247,7 +247,7 @@ const RaceInfoParticipants: FC<Props> = ({ race }) => {
                     </ol>
                 </div>
 
-                <div className="border-1 border-[#EEEEEE] p-8 max-sm:p-4 rounded-lg">
+                <div className="border border-[#EEEEEE] p-8 max-sm:p-4 rounded-lg">
                     <h3 className="text-xl max-sm:text-lg font-semibold mb-4 max-sm:mb-3">
                         Медицинские требования
                     </h3>

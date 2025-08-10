@@ -20,7 +20,7 @@ const TrainingTrainingsFormats: FC = () => {
             </h2>
 
             <div className="flex flex-col gap-5 max-sm:gap-3">
-                <div className="border-1 border-[#EEEEEE] p-8 max-sm:p-4 rounded-lg flex flex-col">
+                <div className="border border-[#EEEEEE] p-8 max-sm:p-4 rounded-lg flex flex-col">
                     <Image
                         src={img1}
                         alt="personal-trainings"
@@ -53,7 +53,7 @@ const TrainingTrainingsFormats: FC = () => {
                         Записаться
                     </Link>
                 </div>
-                <div className="border-1 border-[#EEEEEE] p-8 max-sm:p-4 rounded-lg flex flex-col">
+                <div className="border border-[#EEEEEE] p-8 max-sm:p-4 rounded-lg flex flex-col">
                     <Image
                         src={img2}
                         alt="personal-trainings"
@@ -83,7 +83,7 @@ const TrainingTrainingsFormats: FC = () => {
                         Записаться
                     </Link>
                 </div>
-                <div className="border-1 border-[#EEEEEE] p-8 max-sm:p-4 rounded-lg flex flex-col">
+                <div className="border border-[#EEEEEE] p-8 max-sm:p-4 rounded-lg flex flex-col">
                     <Image
                         src={img3}
                         alt="personal-trainings"
@@ -113,7 +113,7 @@ const TrainingTrainingsFormats: FC = () => {
                         Записаться
                     </Link>
                 </div>
-                <div className="border-1 border-[#EEEEEE] p-8 max-sm:p-4 rounded-lg flex flex-col">
+                <div className="border border-[#EEEEEE] p-8 max-sm:p-4 rounded-lg flex flex-col">
                     <Image
                         src={img4}
                         alt="personal-trainings"

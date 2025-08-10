@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { ShopProduct } from './types';
+import Image from 'next/image';
 
 interface Props {
     product: ShopProduct;
@@ -26,10 +27,12 @@ export default function ProductCard({ product }: Props) {
             className="bg-white rounded-lg shadow hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col cursor-pointer"
         >
             <div className="relative">
-                <img
+                <Image
                     src={imgs[0]}
                     alt={title}
                     className="w-full h-96 max-2xl:h-72 max-xl:h-60 max-sm:h-72 object-cover"
+                    width={1000}
+                    height={1000}
                 />
                 {(discountProcent || isNew) && (
                     <span

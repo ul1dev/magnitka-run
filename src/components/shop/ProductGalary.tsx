@@ -19,6 +19,7 @@ import { Fancybox } from '@fancyapps/ui/dist/fancybox';
 import '@fancyapps/ui/dist/carousel/carousel.css';
 import '@fancyapps/ui/dist/fancybox/fancybox.css';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface Props {
     imgs: string[];
@@ -79,10 +80,12 @@ export default function ProductGallery({ imgs }: Props) {
                         data-fancybox="gallery"
                         className="block w-full h-full"
                     >
-                        <img
+                        <Image
                             src={src}
                             alt={`Slide ${i + 1}`}
                             className="w-full h-128 max-lg:h-96 max-md:h-120 max-sm:h-96 max-[400px]:!h-88 object-cover rounded-lg"
+                            width={1000}
+                            height={1000}
                         />
                     </Link>
                 </div>

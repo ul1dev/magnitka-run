@@ -41,7 +41,7 @@ export default function ProductBar({ product }: Props) {
     };
 
     return (
-        <div className="border-1 border-[#EEEEEE] p-8 max-lg:p-4 rounded-lg">
+        <div className="border border-[#EEEEEE] p-8 max-lg:p-4 rounded-lg">
             <p className="font-bold text-3xl max-lg:text-2xl">{finalPrice} ₽</p>
 
             {discountProcent && (

@@ -22,7 +22,7 @@ const TrainingTrainingsTrainers: FC<Props> = ({ trainers }) => {
             <div className="flex flex-col gap-5 max-sm:gap-3">
                 {trainers.map((trainer, i) => (
                     <div
-                        className="border-1 border-[#EEEEEE] p-8 max-sm:p-4 rounded-lg flex flex-col"
+                        className="border border-[#EEEEEE] p-8 max-sm:p-4 rounded-lg flex flex-col"
                         key={trainer.id}
                     >
                         {trainer.img && (

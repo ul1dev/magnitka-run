@@ -11,7 +11,7 @@ export default function CheckoutBar() {
     } = useCart();
 
     return (
-        <div className="border-1 border-[#EEEEEE] rounded-lg">
+        <div className="border border-[#EEEEEE] rounded-lg">
             <div className="p-6 max-lg:p-4 flex flex-col gap-3">
                 <div className="flex justify-between text-sm">
                     <p>Всего товаров: {itemsLength}</p>

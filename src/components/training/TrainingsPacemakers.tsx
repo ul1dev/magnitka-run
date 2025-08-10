@@ -21,7 +21,7 @@ const TrainingTrainingsPacemakers: FC<Props> = ({ pacemakers }) => {
             <div className="flex flex-col gap-5 max-sm:gap-3">
                 {pacemakers.map((pacemaker, i) => (
                     <div
-                        className="border-1 border-[#EEEEEE] p-8 max-sm:p-4 rounded-lg flex flex-col"
+                        className="border border-[#EEEEEE] p-8 max-sm:p-4 rounded-lg flex flex-col"
                         key={pacemaker.id}
                     >
                         {pacemaker.img && (

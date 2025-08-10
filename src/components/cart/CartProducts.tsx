@@ -17,7 +17,7 @@ export default function CartProducts() {
                         imgs,
                         title,
                         price,
-                        sizesTitle,
+                        sizesTitle = 'Выбор',
                         sizes,
                         discountProcent = 0,
                     },
@@ -26,7 +26,7 @@ export default function CartProducts() {
                 }) => (
                     <div
                         key={`${id}-${size}`}
-                        className="border-1 border-[#EEEEEE] p-6 max-lg:p-4 max-sm:p-3 rounded-lg w-full flex gap-4 justify-between md:items-center max-md:flex-col max-md:relative"
+                        className="border border-[#EEEEEE] p-6 max-lg:p-4 max-sm:p-3 rounded-lg w-full flex gap-4 justify-between md:items-center max-md:flex-col max-md:relative"
                     >
                         <div className="flex gap-4 max-[400px]:gap-2">
                             <Link href={`/shop/products/${id}`}>
@@ -58,7 +58,7 @@ export default function CartProducts() {
                             </div>
                         </div>
                         <div className="flex items-center gap-5 max-md:justify-end">
-                            <div className="flex items-center border-[#EEEEEE] border-1 rounded">
+                            <div className="flex items-center border-[#EEEEEE] border rounded">
                                 <p
                                     className="text-xl cursor-pointer py-1 px-3"
                                     onClick={() => decItemCount(id, size)}
