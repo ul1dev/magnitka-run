@@ -29,7 +29,7 @@ export default function ProductBar({ product }: Props) {
     };
 
     const handleAddToCart = () => {
-        if (!selectedSize && sizes) return;
+        if (!selectedSize && Boolean(sizes?.length)) return;
 
         const item: CartItem = {
             product,
@@ -64,7 +64,7 @@ export default function ProductBar({ product }: Props) {
                 {description}
             </p>
 
-            {sizes && (
+            {Boolean(sizes?.length) && (
                 <div className="mt-3">
                     <p className="font-bold text-sm">Выберите {sizesTitle}</p>
                     <div className="flex flex-wrap gap-2 max-sm:gap-1.5 mt-1">
@@ -94,8 +94,8 @@ export default function ProductBar({ product }: Props) {
                 className={classNames(
                     'mt-8 w-full cursor-pointer text-white max-lg:py-3 py-4 rounded font-bold text-xl max-lg:text-lg',
                     {
-                        'bg-[#003593]': selectedSize || !sizes,
-                        'bg-gray-300': !selectedSize && sizes,
+                        'bg-[#003593]': selectedSize || !Boolean(sizes?.length),
+                        'bg-gray-300': !selectedSize && Boolean(sizes?.length),
                     }
                 )}
                 onClick={handleAddToCart}

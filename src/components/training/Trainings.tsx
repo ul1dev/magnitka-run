@@ -2,7 +2,7 @@
 
 import classNames from 'classnames';
 import Link from 'next/link';
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import TrainingTrainingsFormats from './TrainingsFormats';
 import TrainingTrainingsTrainers from './TrainingsTrainers';
 import TrainingTrainingsPacemakers from './TrainingsPacemakers';
@@ -21,26 +21,53 @@ export interface Pacemaker {
     description: string;
 }
 
-const TrainingTrainings: FC = () => {
-    const trainers: Trainer[] = [
-        {
-            id: '22670748-c563-4c2b-8053-73d18e463155',
-            img: 'https://res.cloudinary.com/dnur7812w/image/upload/v1754309263/trainer1_xu8m9v.jpg',
-            name: 'Егор Николаев',
-            description: `МСМК по легкой атлетике, многократный Чемпион России, полуфиналист ОИ 2012г. Лондона на 1500, трехкратный Чемпион Европы, беговой стаж более 20 лет, был в составе сборной России более 15 лет, в 2020 получил диплом по квалификации «Тренер».<br />
-За свою карьеру спортсмена пробежал от 800 м до марафона, был призером на Чемпионате Европу по кроссу.`,
-        },
-    ];
+const API_BASE =
+    process.env.NEXT_PUBLIC_API_BASE?.replace(/\/$/, '') ??
+    'http://localhost:8080';
 
-    const pacemakers: Pacemaker[] = [
-        {
-            id: '22670748-c563-4c2b-8053-73d18e463155',
-            img: 'https://res.cloudinary.com/dnur7812w/image/upload/v1754309263/trainer1_xu8m9v.jpg',
-            name: 'Егор Николаев',
-            description: `МСМК по легкой атлетике, многократный Чемпион России, полуфиналист ОИ 2012г. Лондона на 1500, трехкратный Чемпион Европы, беговой стаж более 20 лет, был в составе сборной России более 15 лет, в 2020 получил диплом по квалификации «Тренер».<br />
-За свою карьеру спортсмена пробежал от 800 м до марафона, был призером на Чемпионате Европу по кроссу.`,
-        },
-    ];
+function norm(u?: string | null): string | undefined {
+    if (!u) return undefined;
+    return u.startsWith('/') ? `${API_BASE}${u}` : u;
+}
+
+const TrainingTrainings: FC = () => {
+    const [trainers, setTrainers] = useState<Trainer[]>([]);
+    const [pacemakers, setPacemakers] = useState<Pacemaker[]>([]);
+    const [error, setError] = useState<string | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        let alive = true;
+        (async () => {
+            setLoading(true);
+            setError(null);
+            try {
+                const [tRes, pRes] = await Promise.all([
+                    fetch(`${API_BASE}/trainers`, { cache: 'no-store' }),
+                    fetch(`${API_BASE}/pacemakers`, { cache: 'no-store' }),
+                ]);
+                if (!tRes.ok) throw new Error(`trainers ${tRes.status}`);
+                if (!pRes.ok) throw new Error(`pacemakers ${pRes.status}`);
+
+                const [tData, pData] = (await Promise.all([
+                    tRes.json(),
+                    pRes.json(),
+                ])) as [Trainer[], Pacemaker[]];
+
+                if (!alive) return;
+                setTrainers(tData.map((t) => ({ ...t, img: norm(t.img) })));
+                setPacemakers(pData.map((p) => ({ ...p, img: norm(p.img) })));
+            } catch (e: any) {
+                if (!alive) return;
+                setError(e?.message || 'Ошибка загрузки данных');
+            } finally {
+                if (alive) setLoading(false);
+            }
+        })();
+        return () => {
+            alive = false;
+        };
+    }, []);
 
     const trainingNavItems = [{ id: 'formats', label: 'Форматы тренировок' }];
 

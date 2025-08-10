@@ -18,6 +18,7 @@ function FileInput({
     onFiles,
     buttonText,
     hint,
+    previewUrl, // одиночное превью
 }: {
     name: string;
     multiple?: boolean;
@@ -25,11 +26,12 @@ function FileInput({
     onFiles?: (files: FileList | null) => void;
     buttonText: string;
     hint?: string;
+    previewUrl?: string; // <- добавили
 }) {
     const [filesText, setFilesText] = useState('Файл не выбран');
 
     return (
-        <div className="grid gap-1">
+        <div className="grid gap-2">
             <div className="inline-flex items-center gap-3">
                 <label className="relative">
                     <input
@@ -55,7 +57,38 @@ function FileInput({
                     {filesText}
                 </span>
             </div>
+
+            {/* превью одиночного изображения */}
+            {previewUrl && (
+                <div className="flex items-center gap-3">
+                    <img
+                        src={previewUrl}
+                        alt=""
+                        className="h-16 w-16 object-cover rounded-md border"
+                    />
+                    <span className="text-xs opacity-60">
+                        Текущее изображение
+                    </span>
+                </div>
+            )}
+
             {hint && <div className="text-xs opacity-60">{hint}</div>}
+        </div>
+    );
+}
+
+function ImagesPreview({ items }: { items?: string[] }) {
+    if (!items?.length) return null;
+    return (
+        <div className="flex flex-wrap gap-2">
+            {items.map((src, i) => (
+                <img
+                    key={i}
+                    src={src}
+                    className="h-16 w-16 object-cover rounded-md border"
+                    alt=""
+                />
+            ))}
         </div>
     );
 }
@@ -83,7 +116,7 @@ export default function RaceForm({ initial, id }: Props) {
     const [isRegBtn, setIsRegBtn] = useState<boolean>(!!initial?.isRegBtn);
     const [isMoreBtn, setIsMoreBtn] = useState<boolean>(!!initial?.isMoreBtn);
     const [btnsPosition, setBtnsPos] = useState<Race['btnsPosition']>(
-        initial?.btnsPosition ?? 'top-left'
+        initial?.btnsPosition ?? 'top-right'
     );
 
     // партнёры
@@ -101,6 +134,7 @@ export default function RaceForm({ initial, id }: Props) {
             ? initialPartners
             : [{ categoryText: '', link: '', file: null }]
     );
+    const [partnersChanged, setPartnersChanged] = useState(false);
 
     const addPartner = () =>
         setPartners((prev) => [
@@ -109,10 +143,15 @@ export default function RaceForm({ initial, id }: Props) {
         ]);
     const removePartner = (idx: number) =>
         setPartners((prev) => prev.filter((_, i) => i !== idx));
+
     const updatePartner = (idx: number, patch: Partial<PartnerRow>) =>
-        setPartners((prev) =>
-            prev.map((p, i) => (i === idx ? { ...p, ...patch } : p))
-        );
+        setPartners((prev) => {
+            const next = prev.map((p, i) =>
+                i === idx ? { ...p, ...patch } : p
+            );
+            setPartnersChanged(true);
+            return next;
+        });
 
     async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
@@ -122,25 +161,46 @@ export default function RaceForm({ initial, id }: Props) {
         const formEl = e.currentTarget;
         const fd = new FormData(formEl);
 
+        // служебные
         fd.delete('isRegBtn_radio');
         fd.delete('isMoreBtn_radio');
 
-        // булевы флаги и позиция кнопок — явно записываем
+        // флаги
         fd.set('isRegBtn', String(isRegBtn));
         fd.set('isMoreBtn', String(isMoreBtn));
-        if (isRegBtn || isMoreBtn) {
+        if (isRegBtn || isMoreBtn)
             fd.set('btnsPosition', btnsPosition ?? 'top-left');
+
+        // ПАРТНЁРЫ: шлём мету только если создаём или были изменения
+        const isCreate = !id;
+        const hasAnyPartnerFile = partners.some((p) => !!p.file);
+
+        if (hasAnyPartnerFile) {
+            // требуем файл у каждого — иначе индексы собьются на бэке
+            const allHave = partners.every((p) => !!p.file);
+            if (!allHave) {
+                setLoading(false);
+                setError(
+                    'Если меняете картинки партнёров, загрузите изображения для всех партнёров по порядку.'
+                );
+                return;
+            }
         }
 
-        // meta партнёров и файлы партнёров
-        const partnersMeta = partners.map((p) => ({
-            categoryText: p.categoryText,
-            link: p.link,
-        }));
-        fd.set('partners', JSON.stringify(partnersMeta));
-        partners.forEach((p) => {
-            if (p.file) fd.append('partnersImgs[]', p.file);
-        });
+        if (isCreate || partnersChanged || hasAnyPartnerFile) {
+            const partnersMeta = partners.map((p) => ({
+                categoryText: p.categoryText,
+                link: p.link,
+            }));
+            fd.set('partners', JSON.stringify(partnersMeta));
+
+            if (hasAnyPartnerFile) {
+                partners.forEach((p) => {
+                    // по порядку — под каждую запись партнёра свой файл
+                    fd.append('partnersImgs[]', p.file as File);
+                });
+            }
+        }
 
         try {
             if (id) {
@@ -228,7 +288,11 @@ export default function RaceForm({ initial, id }: Props) {
 
             <div className="grid gap-2">
                 <label className="text-sm opacity-70">Фон карточки</label>
-                <FileInput name="cardBgImg" buttonText="Выбрать файл" />
+                <FileInput
+                    name="cardBgImg"
+                    buttonText="Выбрать файл"
+                    previewUrl={initial?.cardBgImg}
+                />
             </div>
 
             <div className="grid gap-2">
@@ -405,7 +469,11 @@ export default function RaceForm({ initial, id }: Props) {
                         <label className="text-sm opacity-70">
                             Фон на странице забега
                         </label>
-                        <FileInput name="mainBgImg" buttonText="Выбрать файл" />
+                        <FileInput
+                            name="mainBgImg"
+                            buttonText="Выбрать файл"
+                            previewUrl={initial?.mainBgImg}
+                        />
                     </div>
 
                     <div className="grid gap-2">
@@ -500,11 +568,14 @@ export default function RaceForm({ initial, id }: Props) {
                         <label className="text-sm opacity-70">
                             Пакет участника (изображения)
                         </label>
+                        <ImagesPreview
+                            items={initial?.participantPackageImgs}
+                        />
                         <FileInput
                             name="participantPackageImgs[]"
                             multiple
                             buttonText="Выбрать файлы"
-                            hint="Можно выбрать несколько файлов."
+                            hint="Если выбрать новые файлы и сохранить, старые изображения раздела будут заменены."
                         />
                     </div>
 
@@ -523,11 +594,12 @@ export default function RaceForm({ initial, id }: Props) {
                         <label className="text-sm opacity-70">
                             Маршруты (изображения)
                         </label>
+                        <ImagesPreview items={initial?.routesImgs} />
                         <FileInput
                             name="routesImgs[]"
                             multiple
                             buttonText="Выбрать файлы"
-                            hint="Можно выбрать несколько файлов."
+                            hint="Если выбрать новые файлы и сохранить, старые изображения раздела будут заменены."
                         />
                     </div>
 
@@ -556,7 +628,7 @@ export default function RaceForm({ initial, id }: Props) {
                                         </label>
                                         <input
                                             className="border rounded-xl px-3 py-2"
-                                            placeholder="Например, Генеральный партнёр"
+                                            placeholder="Например, Генеральные партнеры"
                                             value={p.categoryText}
                                             onChange={(e) =>
                                                 updatePartner(idx, {
@@ -587,6 +659,25 @@ export default function RaceForm({ initial, id }: Props) {
                                         <label className="text-sm opacity-70">
                                             Картинка партнёра
                                         </label>
+                                        {(initial?.partners?.[idx] as any)
+                                            ?.img && (
+                                            <div className="flex items-center gap-3">
+                                                <img
+                                                    src={
+                                                        (
+                                                            initial?.partners?.[
+                                                                idx
+                                                            ] as any
+                                                        ).img
+                                                    }
+                                                    className="h-12 w-12 object-cover rounded-md border"
+                                                    alt=""
+                                                />
+                                                <span className="text-xs opacity-60">
+                                                    Текущее изображение
+                                                </span>
+                                            </div>
+                                        )}
                                         <FileInput
                                             name="partnersImgs[]"
                                             buttonText="Выбрать файл"
@@ -595,7 +686,7 @@ export default function RaceForm({ initial, id }: Props) {
                                                     file: fl?.[0] ?? null,
                                                 })
                                             }
-                                            hint="При редактировании старые изображения партнёров будут удалены и заменены."
+                                            hint="При редактировании старые изображения партнёров будут заменены."
                                         />
                                     </div>
                                 </div>

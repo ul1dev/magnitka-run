@@ -6,6 +6,28 @@ import { adminFetch } from '@/lib/admin-api';
 import type { Race } from '@/components/home/types';
 import { useParams } from 'next/navigation';
 
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE?.replace(/\/$/, '') ?? '';
+
+function norm(u?: string | null): string | undefined {
+    if (!u) return undefined;
+    return u.startsWith('/') && API_BASE ? `${API_BASE}${u}` : u;
+}
+function normArr(a?: (string | null | undefined)[]): string[] | undefined {
+    if (!a) return undefined;
+    return a.map(norm).filter((x): x is string => Boolean(x));
+}
+function normRace(r: Race): Race {
+    return {
+        ...r,
+        cardBgImg: norm(r.cardBgImg),
+        mainBgImg: norm(r.mainBgImg),
+        aboutImgs: normArr(r.aboutImgs),
+        participantPackageImgs: normArr(r.participantPackageImgs),
+        routesImgs: normArr(r.routesImgs),
+        partners: r.partners?.map((p) => ({ ...p, img: norm(p.img) || '' })),
+    };
+}
+
 export default function EditRacePage() {
     const { id } = useParams<{ id: string }>();
     const [race, setRace] = useState<Race | null>(null);
@@ -15,7 +37,7 @@ export default function EditRacePage() {
         (async () => {
             try {
                 const r = await adminFetch<Race>(`/races/${id}`);
-                setRace(r);
+                setRace(normRace(r));
             } catch (e: any) {
                 setErr(e.message || 'Ошибка загрузки');
             }

@@ -4,7 +4,12 @@ import { useState } from 'react';
 import { adminFetch } from '@/lib/admin-api';
 
 type Props = {
-    initial?: { id?: string; name?: string; description?: string };
+    initial?: {
+        id?: string;
+        name?: string;
+        description?: string;
+        img?: string | null;
+    };
     id?: string; // если редактирование
 };
 
@@ -14,17 +19,19 @@ function FileInput({
     accept = 'image/*',
     hint,
     onFiles,
+    previewUrl, // <- добавили
 }: {
     name: string;
     buttonText: string;
     accept?: string;
     hint?: string;
     onFiles?: (files: FileList | null) => void;
+    previewUrl?: string | null;
 }) {
     const [filesText, setFilesText] = useState('Файл не выбран');
 
     return (
-        <div className="grid gap-1">
+        <div className="grid gap-2">
             <div className="inline-flex items-center gap-3">
                 <label className="relative">
                     <input
@@ -34,7 +41,7 @@ function FileInput({
                         className="sr-only"
                         onChange={(e) => {
                             const fl = e.currentTarget.files;
-                            onFiles?.(fl);
+                            onFiles?.(fl || null);
                             if (!fl || fl.length === 0)
                                 setFilesText('Файл не выбран');
                             else setFilesText(fl[0].name);
@@ -51,6 +58,21 @@ function FileInput({
                     {filesText}
                 </span>
             </div>
+
+            {/* превью текущей картинки */}
+            {previewUrl ? (
+                <div className="flex items-center gap-3">
+                    <img
+                        src={previewUrl}
+                        alt=""
+                        className="h-16 w-16 object-cover rounded-md border"
+                    />
+                    <span className="text-xs opacity-60">
+                        Текущее изображение
+                    </span>
+                </div>
+            ) : null}
+
             {hint && <div className="text-xs opacity-60">{hint}</div>}
         </div>
     );
@@ -127,6 +149,7 @@ export default function TrainerForm({ initial, id }: Props) {
                 <FileInput
                     name="img"
                     buttonText="Выбрать файл"
+                    previewUrl={initial?.img ?? undefined}
                     hint="При редактировании старая картинка будет удалена и заменена."
                 />
             </div>

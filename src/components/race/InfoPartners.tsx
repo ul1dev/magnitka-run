@@ -56,13 +56,15 @@ const RaceInfoPartners: FC<Props> = ({ race }) => {
                                         href={partner.link ?? '#'}
                                         target="_blank"
                                     >
-                                        <Image
-                                            src={partner.img}
-                                            alt={`${group.label} logo`}
-                                            className="w-32 max-sm:w-24 object-contain"
-                                            width={100}
-                                            height={100}
-                                        />
+                                        {partner.img && (
+                                            <Image
+                                                src={partner.img}
+                                                alt={`${group.label} logo`}
+                                                className="w-32 max-sm:w-24 object-contain"
+                                                width={100}
+                                                height={100}
+                                            />
+                                        )}
                                     </Link>
                                 ))}
                             </div>

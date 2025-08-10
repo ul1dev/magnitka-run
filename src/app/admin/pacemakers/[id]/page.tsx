@@ -12,6 +12,13 @@ type Pacemaker = {
     img?: string | null;
 };
 
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE?.replace(/\/$/, '') ?? '';
+
+function norm(u?: string | null): string | undefined {
+    if (!u) return undefined;
+    return u.startsWith('/') && API_BASE ? `${API_BASE}${u}` : u;
+}
+
 export default function EditPacemakerPage() {
     const { id } = useParams<{ id: string }>();
     const [pacemaker, setPacemaker] = useState<Pacemaker | null>(null);
@@ -21,7 +28,10 @@ export default function EditPacemakerPage() {
         (async () => {
             try {
                 const p = await adminFetch<Pacemaker>(`/pacemakers/${id}`);
-                setPacemaker(p);
+                setPacemaker({
+                    ...p,
+                    img: norm(p.img) ?? null,
+                });
             } catch (e: any) {
                 setErr(e.message || 'Ошибка загрузки');
             }

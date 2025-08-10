@@ -14,6 +14,7 @@ type Props = {
         description?: string | null;
         sizesTitle?: string | null;
         sizes?: { isUnavailable: boolean; value: string }[] | null;
+        imgs?: string[] | null;
     };
     id?: string; // если редактирование
 };
@@ -27,6 +28,7 @@ function FileInput({
     accept = 'image/*',
     hint,
     onFiles,
+    previewUrls, // <- добавили превью
 }: {
     name: string;
     buttonText: string;
@@ -34,11 +36,12 @@ function FileInput({
     accept?: string;
     hint?: string;
     onFiles?: (files: FileList | null) => void;
+    previewUrls?: string[]; // список уже загруженных картинок
 }) {
     const [filesText, setFilesText] = useState('Файл не выбран');
 
     return (
-        <div className="grid gap-1">
+        <div className="grid gap-2">
             <div className="inline-flex items-center gap-3">
                 <label className="relative">
                     <input
@@ -49,7 +52,7 @@ function FileInput({
                         className="sr-only"
                         onChange={(e) => {
                             const fl = e.currentTarget.files;
-                            onFiles?.(fl);
+                            onFiles?.(fl || null);
                             if (!fl || fl.length === 0)
                                 setFilesText('Файл не выбран');
                             else if (fl.length === 1) setFilesText(fl[0].name);
@@ -67,6 +70,37 @@ function FileInput({
                     {filesText}
                 </span>
             </div>
+
+            {/* Превью уже сохранённых изображений */}
+            {previewUrls && previewUrls.length > 0 && (
+                <>
+                    {multiple ? (
+                        <div className="flex gap-2">
+                            {previewUrls.map((src, i) => (
+                                <div key={`${src}-${i}`} className="relative">
+                                    <img
+                                        src={src}
+                                        alt=""
+                                        className="h-20 w-full object-cover rounded-md border"
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    ) : (
+                        <div className="flex items-center gap-3">
+                            <img
+                                src={previewUrls[0]}
+                                alt=""
+                                className="h-16 w-16 object-cover rounded-md border"
+                            />
+                            <span className="text-xs opacity-60">
+                                Текущее изображение
+                            </span>
+                        </div>
+                    )}
+                </>
+            )}
+
             {hint && <div className="text-xs opacity-60">{hint}</div>}
         </div>
     );
@@ -136,6 +170,10 @@ export default function ShopProductForm({ initial, id }: Props) {
             setLoading(false);
         }
     }
+
+    // превью уже загруженных изображений (нормализованные URL приходят из страницы редактирования)
+    const previewAll = initial?.imgs ?? [];
+    const previewFirst = previewAll.length ? [previewAll[0]!] : [];
 
     return (
         <form
@@ -227,7 +265,24 @@ export default function ShopProductForm({ initial, id }: Props) {
                 />
             </div>
 
-            {/* Картинки товара */}
+            {/* Титульное изображение (показываем превью первого) */}
+            <div className="grid gap-2">
+                <label className="text-sm opacity-70">
+                    Титульное изображение товара*
+                </label>
+                <FileInput
+                    name="imgs[]"
+                    buttonText="Выбрать файл"
+                    previewUrls={previewFirst}
+                    hint={
+                        id
+                            ? 'Если выбрать новые файлы и сохранить, все старые картинки будут удалены и заменены новым набором.'
+                            : 'При создании требуется одна картинка.'
+                    }
+                />
+            </div>
+
+            {/* Остальные изображения (превью всех) */}
             <div className="grid gap-2">
                 <label className="text-sm opacity-70">
                     Изображения товара*
@@ -236,10 +291,11 @@ export default function ShopProductForm({ initial, id }: Props) {
                     name="imgs[]"
                     multiple
                     buttonText="Выбрать файлы"
+                    previewUrls={previewAll}
                     hint={
                         id
-                            ? 'Если выбрать новые файлы и сохранить, старые картинки будут удалены и заменены.'
-                            : 'При создании требуется минимум одна картинка.'
+                            ? 'Если выбрать новые файлы и сохранить, все старые картинки будут удалены и заменены новым набором.'
+                            : 'При создании требуется минимум одно изображение.'
                     }
                 />
             </div>

@@ -1,141 +1,66 @@
 import { notFound } from 'next/navigation';
-import { Race } from '@/components/home/types';
+import type { Race } from '@/components/home/types';
 import RaceStart from '@/components/race/Start';
 import RaceInfo from '@/components/race/Info';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 
 interface PageProps {
-    params: {
-        id: string;
+    params: { id: string };
+}
+
+const API_BASE =
+    process.env.NEXT_PUBLIC_API_BASE?.replace(/\/$/, '') ??
+    'http://localhost:8080';
+
+function norm(u?: string | null): string | undefined {
+    if (!u) return undefined;
+    return u.startsWith('/') ? `${API_BASE}${u}` : u;
+}
+function normArr(a?: (string | null | undefined)[]): string[] | undefined {
+    if (!a) return undefined;
+    return a.map(norm).filter((x): x is string => Boolean(x));
+}
+
+async function fetchRace(id: string): Promise<Race | null> {
+    const res = await fetch(`${API_BASE}/races/${encodeURIComponent(id)}`, {
+        cache: 'no-store',
+    });
+
+    if (res.status === 404) return null;
+    if (!res.ok) throw new Error(`Failed to load race ${id}: ${res.status}`);
+
+    const r = (await res.json()) as Race;
+
+    // нормализуем пути к картинкам
+    return {
+        ...r,
+        cardBgImg: norm(r.cardBgImg),
+        mainBgImg: norm(r.mainBgImg),
+        aboutImgs: normArr(r.aboutImgs),
+        participantPackageImgs: normArr(r.participantPackageImgs),
+        routesImgs: normArr(r.routesImgs),
+        partners: r.partners?.map((p) => ({
+            ...p,
+            img: norm(p.img) || '', // в типе img: string
+        })),
     };
 }
 
 export async function generateMetadata({
     params: { id },
 }: PageProps): Promise<Metadata> {
-    // const res = await fetch(`${API_URL}/races/${id}`, { cache: 'no-store' });
-
-    // if (!res.ok) {
-    //     // if the API returned 404, tell Next.js to render the 404 page
-    //     notFound();
-    // }
-
-    // const race: Race = await res.json();
-
-    return {
-        title: 'Полумарафон Азия-Европа',
-    };
+    try {
+        const race = await fetchRace(id);
+        if (!race) return { title: 'Забег не найден' };
+        return { title: race.title || 'Забег' };
+    } catch {
+        return { title: 'Забег' };
+    }
 }
 
 export default async function RacePage({ params: { id } }: PageProps) {
-    const API_URL = process.env.BACKEND_URL || 'https://api.example.com';
-
-    // const res = await fetch(`${API_URL}/races/${id}`, { cache: 'no-store' });
-
-    // if (!res.ok) {
-    //     notFound();
-    // }
-
-    // const race: Race = await res.json();
-
-    const race: Race = {
-        id: 'aca7ebe2-d2a3-4d63-b542-678ec5e54d26',
-        cardTitle: `Полумарафон<br />Азия-Европа`,
-        cardDates: '6-7 сентября',
-        isRegBtn: true,
-        regBtnUrl: 'https://myrace.info/events/1056',
-        regBtnTextColor: '#003593',
-        regBtnBgColor: '#FFFFFF',
-        isMoreBtn: true,
-        moreBtnTextColor: '#FFFFFF',
-        moreBtnBorderColor: '#FFFFFF',
-        cardBgImg:
-            'https://optim.tildacdn.com/tild3338-6562-4138-a365-653138396332/-/format/webp/_2_2.jpg.webp',
-        mainBgImg:
-            'https://optim.tildacdn.com/tild6166-6630-4033-a365-326264386430/-/format/webp/_13.jpg.webp',
-        date: '2025-09-06',
-        title: 'Полумарафон Азия-Европа',
-        description: `В 1967 году в преддверии большого юбилея — 50-летия Советской власти в Магнитогорске решили провести забег из Азии в Европу. Очень символично, поскольку город расположен на берегах реки Урал (Яик), посередине которой проходит граница Азии и Европы.<br />
-Концепция была достаточно смелой, ввиду того, что такого вида спорта, как «Пробег» на тот момент просто не существовало.<br />
-Новаторство самого первого «Пробега» заключалось и в самой идее. Мероприятие должно было символизировать тот факт, что спорт выходит к людям, взрослым и детям, простым прохожим, что бы любой желающий мог стать частью этого праздника спорта.<br />
-Инициатива оказалась очень удачной: пробег высоко оценили как спортсмены-участники, жители города, так и партийные функционеры.<br />
-На старт самого первого забега вышли всего 30 человек. Все они были профессиональными спортсменами.<br />
-Однако со временем состав участников становился более демократичным: все больше людей, не имеющих отношения к профессиональному спорту, выходили на старт, чтобы приобщиться к спортивному движению, проверить себя.<br />
-В 1974 году в пробеге «Азия — Европа» впервые приняли участие шесть девушек. Все они успешно финишировали.<br />
-В первые годы для участия в забеге приезжали в основном спортсмены из ближайших районов, Южноуральска, Кургана, Белорецка. Позже пробег стал по истине интернациональным. В разные годы на старт выходили студенты из Кубы, Анголы, Буркина-Фасо.<br />
-Сегодня география участников охватывает 10 регионов страны. Среди участников примерно равное количество мужчин и женщин.<br />
-<br />
-Победителем первого забега стал Виктор Шестаев — многократный чемпион области по бегу, бронзовый призер Спартакиады народов РСФСР, мастер спорта международного класса.<br />
-Участие именитых спортсменов в пробеге в дальнейшем стало обычным делом. Так, дважды в нем участвовал легенда советской легкой атлетики Леонид Мосеев. Каждый год в пробеге «Азия — Европа» принимают участие титулованные спортсмены.<br />
-<br />
-Первоначально дистанция пробега составляла 15 км. Но такой маршрут никак не квалифицировался в существующей всесоюзной системе. В 1976 году организаторы попробовали увеличить его до 20км, чтобы спортсмены могли получать спортивные разряды. Однако удлинение маршрута оказалось непростой задачей из-за организационных и бюрократических сложностей.<br />
-Сейчас в программе забега четыре взрослые дистанции на 2, 5, 10км и полумарафон 21.1км, а также одна детская дистанция — 200м. на ней же участвуют спортсмены с ограниченными способностями.<br />
-<br />
-Когда-то пробег заложил основу активного интереса простых людей к бегу, который мы наблюдаем сейчас. В 1967 году на старт самого первого забега вышли всего 30 человек. В 1987 году в пробеге приняли участие уже 2 000 человек. Конечно, количество участников росло и потому, что за более чем полувековую историю пробег «Азия — Европа» проводился ежегодно — вне зависимости от политической ситуации, наличия спонсоров и погодных условий. За 57 лет количество участников пробега «Азия — Европа» увеличилось в 100 раз!!!<br />
-С 2019 года маршрут дистанции неоднократно менялся, но неизменным было одно, это основная полумарафонская дистанция. Дважды полумарафон проводился в онлайн формате из-за COVID.<br />
-Регистрация на Всероссийский полумарафон «Азия-Европа» 2024 года открылась 01.04.2024 года.<br />
-В этом году Всероссийский полумарафон «Азия — Европа» также станет большим спортивным праздником для Магнитогорцев и гостей города.`,
-        mainTextColor: '#FFFFFF',
-        datesTextColor: '#003593',
-        datesNumsText: '6-7',
-        datesMonthText: 'сентября',
-        aboutImgs: [
-            'https://static.tildacdn.com/tild3830-6330-4233-b334-313837333763/_14.jpg',
-            'https://static.tildacdn.com/tild3463-3965-4461-a333-363563666132/_15.jpg',
-        ],
-        dateAndPlaceText: `<ol><li>6 сентября дистанцию преодолеют юные участники</li>
-<li>7 сентября выйдут на старт взрослые участники</li></ol>
-Форматы забегов: 2км, 5км, 10км, 21.1км, командный забег, детский забег`,
-        participantPackageText:
-            'Официальная футболка марафона «Белые ночи» — проект, выполненный совместно со спортивным партнёром insanity. Футболка имеет спортивный крой и выполнена в уникальном дизайне от Бегового сообщества. Для пошива использован ультралёгкий материал, поэтому вес изделия в зависимости от размера варьируется от 60 до 75 граммов. Ткань имеет антистатическое покрытие, а ещё она быстро впитывает влагу с поверхности тела и выводит её наружу благодаря уникальной структуре волокон DRY TOUCH. Градиентный фон и стильные принты создают ощущение движения и энергии, делая футболку не только функциональной, но и эстетически привлекательной.',
-        participantPackageImgs: [
-            'https://runc.run/uploads/page_section_card_files/WN_tshirt_2025.JPG',
-        ],
-        routesImgs: [
-            'https://runc.run/uploads/page_section_card_files/26062025_WN_Route_10km_ru_3x.png',
-            'https://runc.run/uploads/page_section_card_files/26062025_WN_Route_42km_ru_3x.png',
-            'https://runc.run/uploads/page_section_card_files/26062025_WN_Route_Relay_ru_3x.png',
-        ],
-        routesText:
-            'Марафон «Белые ночи» является членом Ассоциации международных марафонов и пробегов (AIMS). Маршруты 42,2 км и 10 км сертифицируются авторитетной международной организацией AIMS. В 2025 году замер обеих дистанций марафона «Белые ночи» проводит измеритель AIMS Сергей Корнеев (категория B).',
-        partners: [
-            {
-                img: 'https://wnmarathon.runc.run/uploads/partner_logos/HIEX_spb3x_kLiR5tv.png',
-                categoryText: 'Генеральные партнеры',
-                link: 'https://fon.bet/',
-            },
-            {
-                img: 'https://wnmarathon.runc.run/uploads/partner_logos/%D0%9C%D0%B0%D0%B3%D0%BD%D0%B8%D1%8213x.png',
-                categoryText: 'Генеральные партнеры',
-                link: 'https://magnit.ru/',
-            },
-            {
-                img: 'https://wnmarathon.runc.run/uploads/partner_logos/HI_SPB3x_iUJEqmi.png',
-                categoryText: 'Официальные партнёры',
-                link: 'https://sbp.nspk.ru/',
-            },
-            {
-                img: 'https://wnmarathon.runc.run/uploads/partner_logos/Chery3x_JATe9O1.png',
-                categoryText: 'Официальные партнёры',
-                link: 'https://www.chery.ru/',
-            },
-            {
-                img: 'https://wnmarathon.runc.run/uploads/partner_logos/Wonehotel13x-100_3RRaIbY.jpg',
-                categoryText: 'Официальные партнёры',
-                link: 'https://wone-hotels.com/',
-            },
-            {
-                img: 'https://wnmarathon.runc.run/uploads/partner_logos/Insanity3x.png',
-                categoryText: 'Спортивные партнёры',
-                link: 'https://insanity.ru/',
-            },
-            {
-                img: 'https://wnmarathon.runc.run/uploads/partner_logos/Anta13x_n3bjUSp.png',
-                categoryText: 'Спортивные партнёры',
-                link: 'https://anta-sport.ru/',
-            },
-        ],
-    };
+    const race = await fetchRace(id);
+    if (!race) notFound();
 
     return (
         <div className="bg-white">

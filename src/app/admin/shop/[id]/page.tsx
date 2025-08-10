@@ -18,6 +18,17 @@ type Product = {
     sizes?: { isUnavailable: boolean; value: string }[] | null;
 };
 
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE?.replace(/\/$/, '') ?? '';
+
+function norm(u?: string | null): string | undefined {
+    if (!u) return undefined;
+    return u.startsWith('/') && API_BASE ? `${API_BASE}${u}` : u;
+}
+function normArr(a?: (string | null | undefined)[]): string[] {
+    if (!a) return [];
+    return a.map(norm).filter((x): x is string => Boolean(x));
+}
+
 export default function EditProductPage() {
     const { id } = useParams<{ id: string }>();
     const [product, setProduct] = useState<Product | null>(null);
@@ -27,7 +38,10 @@ export default function EditProductPage() {
         (async () => {
             try {
                 const p = await adminFetch<Product>(`/shop/products/${id}`);
-                setProduct(p);
+                setProduct({
+                    ...p,
+                    imgs: normArr(p.imgs),
+                });
             } catch (e: any) {
                 setErr(e.message || 'Ошибка загрузки');
             }

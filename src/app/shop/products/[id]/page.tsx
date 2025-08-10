@@ -1,66 +1,60 @@
 import ProductBar from '@/components/shop/ProductBar';
 import ProductGalary from '@/components/shop/ProductGalary';
 import ProductInfo from '@/components/shop/ProductInfo';
-import { Metadata } from 'next';
+import type { ShopProduct } from '@/components/shop/types';
+import type { Metadata } from 'next';
 import Link from 'next/link';
+import { notFound } from 'next/navigation';
 
 interface PageProps {
-    params: {
-        id: string;
+    params: { id: string };
+}
+
+const API_BASE =
+    process.env.NEXT_PUBLIC_API_BASE?.replace(/\/$/, '') ??
+    'http://localhost:8080';
+
+function norm(u?: string | null): string | undefined {
+    if (!u) return undefined;
+    return u.startsWith('/') ? `${API_BASE}${u}` : u;
+}
+function normArr(a?: (string | null | undefined)[]): string[] {
+    if (!a) return [];
+    return a.map(norm).filter((x): x is string => Boolean(x));
+}
+
+async function fetchProduct(id: string): Promise<ShopProduct | null> {
+    const res = await fetch(
+        `${API_BASE}/shop/products/${encodeURIComponent(id)}`,
+        {
+            cache: 'no-store',
+        }
+    );
+    if (res.status === 404) return null;
+    if (!res.ok) throw new Error(`Failed to load product ${id}: ${res.status}`);
+
+    const p = (await res.json()) as ShopProduct;
+    return {
+        ...p,
+        imgs: normArr(p.imgs),
     };
 }
 
 export async function generateMetadata({
     params: { id },
 }: PageProps): Promise<Metadata> {
-    // const res = await fetch(`${API_URL}/products/${id}`, { cache: 'no-store' });
-
-    // if (!res.ok) {
-    //     // if the API returned 404, tell Next.js to render the 404 page
-    //     notFound();
-    // }
-
-    // const product: ShopProduct = await res.json();
-
-    return {
-        title: 'Магазин | Рюкзак Московский Марафон x GOSHA OREKHOV BAGS',
-    };
+    try {
+        const product = await fetchProduct(id);
+        if (!product) return { title: 'Товар не найден' };
+        return { title: `Магазин | ${product.title}` };
+    } catch {
+        return { title: 'Магазин | Товар' };
+    }
 }
 
 export default async function ShopProductsItem({ params: { id } }: PageProps) {
-    // const res = await fetch(`https://your-backend.com/api/products/${id}`, {
-    //     cache: 'no-store',
-    // });
-    // const product: ShopProduct = await res.json();
-
-    const product = {
-        id: '76ee9607-7850-417f-b68c-f1a5cf859bc6',
-        article: '2025-GO-MM',
-        price: 14000,
-        title: 'Рюкзак Московский Марафон x GOSHA OREKHOV BAGS',
-        info: `Размер: 46х30х16 см (в развернутом виде длина 64 см)<br />
-Объем: 25л (с развернутым клапаном 30л)<br />
-Вес: 1100 гр.<br />
-Дизайн: Беговое сообщество x Gosha Orekhov<br />
-Страна производства: Россия, Санкт-Петербург`,
-        imgs: [
-            'https://shop.runc.run/uploads/products/906A9198.jpg',
-            'https://shop.runc.run/uploads/products/906A9144.jpg',
-            'https://shop.runc.run/uploads/products/906A9147.jpg',
-            'https://shop.runc.run/uploads/products/906A9154.jpg',
-        ],
-        description:
-            'Рюкзак Московский Марафон x GOSHA OREKHOV BAGS, модель Technic Rolltop M с продуманным кроем и функционалом. В нём сочетается аутентичность локального бренда и внимание к качеству каждой детали. Производство — Санкт-Петербург.',
-        sizesTitle: 'цвет',
-        sizes: [
-            { isUnavailable: false, value: 'Черный' },
-            { isUnavailable: false, value: 'Желтый' },
-            { isUnavailable: true, value: 'Красный' },
-        ],
-        createdAt: '2025-08-05T12:03:18.154Z',
-        updatedAt: '2025-08-05T12:03:18.154Z',
-        discountProcent: 10,
-    };
+    const product = await fetchProduct(id);
+    if (!product) notFound();
 
     return (
         <main className="mt-40 max-2xl:mt-34 max-xl:mt-30 max-lg:mt-26 max-sm:mt-24 mb-20 max-2xl:mb-12 max-xl:mb-10 max-lg:mb-8 max-sm:mb-6 max-w-5xl mx-auto max-[1100px]:mx-10 max-lg:mx-7 max-sm:mx-5 max-[450px]:!mx-3">
@@ -78,12 +72,15 @@ export default async function ShopProductsItem({ params: { id } }: PageProps) {
                 </svg>
                 К товарам
             </Link>
+
             <p className="text-xs max-sm:text-[10px] text-gray-400">
                 Артикул {product.article}
             </p>
+
             <h1 className="text-4xl max-lg:text-3xl max-sm:text-2xl max-[450px]:!text-xl font-bold mb-8 max-lg:mb-4 max-sm:mb-2 mt-1">
                 {product.title}
             </h1>
+
             <div className="flex max-md:flex-col gap-10 max-lg:gap-4">
                 <div className="w-full">
                     <ProductGalary imgs={product.imgs} />

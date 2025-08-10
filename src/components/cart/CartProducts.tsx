@@ -46,7 +46,7 @@ export default function CartProducts() {
                                     </p>
                                 </Link>
 
-                                {sizes && (
+                                {Boolean(sizes?.length) && (
                                     <p className="text-xs text-gray-500 mt-10 max-md:mt-2">
                                         {sizesTitle?.slice(0, 1).toUpperCase()}
                                         {sizesTitle

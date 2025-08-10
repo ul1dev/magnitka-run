@@ -43,6 +43,18 @@ const RaceCard: FC<Props> = ({ item }) => {
         }
     };
 
+    const extraStyles =
+        !cardTitle && !cardDates
+            ? {
+                  'justify-end': xPos === 'right',
+                  'justify-start': xPos === 'left',
+                  'items-start': yPos === 'top',
+                  'items-end': yPos === 'bottom',
+                  'items-center': btnsPosition === 'center',
+                  'justify-center': btnsPosition === 'center',
+              }
+            : {};
+
     return (
         <div
             className={classNames(
@@ -63,12 +75,7 @@ const RaceCard: FC<Props> = ({ item }) => {
                     'justify-between py-24 px-16 max-2xl:py-16 max-xl:px-8 max-lg:py-24 max-lg:px-16 max-md:py-16 max-md:px-8 max-sm:flex-col max-sm:py-8 max-[550px]:!px-4 max-[550px]:!py-6 max-[500px]:!pt-8 max-[500px]:!pb-4':
                         cardTitle,
                     'h-full p-6 max-[500px]:p-4 max-[400px]:p-3': !cardTitle,
-                    'justify-end': xPos === 'right',
-                    'justify-start': xPos === 'left',
-                    'items-start': yPos === 'top',
-                    'items-end': yPos === 'bottom',
-                    'items-center': btnsPosition === 'center',
-                    'justify-center': btnsPosition === 'center',
+                    ...extraStyles,
                 })}
             >
                 <div className="uppercase text-white font-extrabold">

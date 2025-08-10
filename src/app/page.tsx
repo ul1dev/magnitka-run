@@ -5,57 +5,40 @@ import HomeTimer from '@/components/home/Timer';
 
 import bgImg from '@/app/static/images/ZEA_0745_1.jpg.webp';
 
-export default function Home() {
-    const races: Race[] = [
-        {
-            id: 'aca7ebe2-d2a3-4d63-b542-678ec5e54d26',
-            cardTitle: `Полумарафон<br />Азия-Европа`,
-            cardDates: '6-7 сентября',
-            isRegBtn: true,
-            regBtnUrl: 'https://myrace.info/events/1056',
-            regBtnTextColor: '#003593',
-            regBtnBgColor: '#FFFFFF',
-            isMoreBtn: true,
-            moreBtnTextColor: '#FFFFFF',
-            moreBtnBorderColor: '#FFFFFF',
-            cardBgImg:
-                'https://optim.tildacdn.com/tild3338-6562-4138-a365-653138396332/-/format/webp/_2_2.jpg.webp',
-            mainBgImg:
-                'https://optim.tildacdn.com/tild6166-6630-4033-a365-326264386430/-/format/webp/_13.jpg.webp',
-            date: '2025-09-06',
-            title: 'Полумарафон Азия-Европа',
-            description: ``,
-            dateAndPlaceText: ``,
-        },
-        {
-            id: '4c86a4bc-61c3-4076-a143-0a571dd5174c',
-            isRegBtn: true,
-            regBtnUrl: 'https://myrace.info/events/1014',
-            regBtnTextColor: '#16bc05',
-            regBtnBgColor: '#FFFFFF',
-            cardBgImg:
-                'https://static.tildacdn.com/tild3531-3932-4365-a266-323063346535/photo.jpeg',
-            btnsPosition: 'top-right',
-            date: '2025-09-12',
-            title: '',
-            description: '',
-            dateAndPlaceText: ``,
-        },
-        {
-            id: '96f37dd8-5b80-45f4-aafe-e07b736c2b34',
-            isRegBtn: true,
-            regBtnUrl: 'https://myrace.info/events/1004',
-            regBtnTextColor: '#003593',
-            regBtnBgColor: '#FFFFFF',
-            cardBgImg:
-                'https://optim.tildacdn.com/tild6261-3862-4130-a565-386534373836/-/format/webp/__2025-04-22__123030.png.webp',
-            btnsPosition: 'center',
-            date: '2025-09-20',
-            title: '',
-            description: '',
-            dateAndPlaceText: ``,
-        },
-    ];
+const API_BASE =
+    process.env.NEXT_PUBLIC_API_BASE?.replace(/\/$/, '') ??
+    'http://localhost:8080';
+
+function norm(u?: string | null): string | undefined {
+    if (!u) return undefined;
+    return u.startsWith('/') ? `${API_BASE}${u}` : u;
+}
+function normArr(a?: (string | null | undefined)[]): string[] | undefined {
+    if (!a) return undefined;
+    return a.map(norm).filter((x): x is string => Boolean(x)); // сузили до string[]
+}
+
+async function getRaces(): Promise<Race[]> {
+    const res = await fetch(`${API_BASE}/races`, { cache: 'no-store' });
+    if (!res.ok) throw new Error(`Failed to load races: ${res.status}`);
+    const data = (await res.json()) as Race[];
+
+    return data.map((r) => ({
+        ...r,
+        cardBgImg: norm(r.cardBgImg),
+        mainBgImg: norm(r.mainBgImg),
+        aboutImgs: normArr(r.aboutImgs),
+        participantPackageImgs: normArr(r.participantPackageImgs),
+        routesImgs: normArr(r.routesImgs),
+        partners: r.partners?.map((p) => ({
+            ...p,
+            img: norm(p.img) || '', // в типе у тебя img: string
+        })),
+    }));
+}
+
+export default async function Home() {
+    const races = await getRaces();
 
     return (
         <>

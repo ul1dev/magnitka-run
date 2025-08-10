@@ -12,6 +12,13 @@ type Trainer = {
     img?: string | null;
 };
 
+const API_BASE = process.env.NEXT_PUBLIC_API_BASE?.replace(/\/$/, '') ?? '';
+
+function norm(u?: string | null): string | undefined {
+    if (!u) return undefined;
+    return u.startsWith('/') && API_BASE ? `${API_BASE}${u}` : u;
+}
+
 export default function EditTrainerPage() {
     const { id } = useParams<{ id: string }>();
     const [trainer, setTrainer] = useState<Trainer | null>(null);
@@ -21,7 +28,10 @@ export default function EditTrainerPage() {
         (async () => {
             try {
                 const t = await adminFetch<Trainer>(`/trainers/${id}`);
-                setTrainer(t);
+                setTrainer({
+                    ...t,
+                    img: norm(t.img) ?? null,
+                });
             } catch (e: any) {
                 setErr(e.message || 'Ошибка загрузки');
             }
