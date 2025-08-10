@@ -3,7 +3,7 @@ export interface Race {
     cardTitle?: string;
     cardDates?: string;
     title: string;
-    description: string;
+    description?: string;
     isRegBtn?: boolean;
     regBtnUrl?: string;
     regBtnTextColor?: string;
@@ -29,7 +29,7 @@ export interface Race {
     datesNumsText?: string;
     datesMonthText?: string;
     aboutImgs?: string[];
-    dateAndPlaceText: string;
+    dateAndPlaceText?: string;
     participantPackageText?: string;
     participantPackageImgs?: string[];
     routesImgs?: string[];

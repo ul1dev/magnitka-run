@@ -27,7 +27,7 @@ const RaceInfoAbout: FC<Props> = ({ race }) => {
                     <div
                         className={`${styles.listedText} flex flex-col gap-2 max-sm:text-sm`}
                         dangerouslySetInnerHTML={{
-                            __html: formatTextToHtml(race.description),
+                            __html: formatTextToHtml(race?.description ?? ''),
                         }}
                     ></div>
                 </div>
