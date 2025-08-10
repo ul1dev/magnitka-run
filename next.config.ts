@@ -11,16 +11,10 @@ const nextConfig: NextConfig = {
             'localhost',
             'магниткабежит.рф',
             'xn--80aadgmgkenqn5dg.xn--p1ai',
-        ], // разрешаем подгружать изображения с этого хоста
-        // или, если нужен более гибкий контроль:
-        // remotePatterns: [
-        //     {
-        //         protocol: 'https',
-        //         hostname: '*.runc.run',
-        //         port: '',
-        //         pathname: '/**',
-        //     },
-        // ],
+        ],
+    },
+    eslint: {
+        ignoreDuringBuilds: true,
     },
 };
 

@@ -66,6 +66,7 @@ const RaceInfoParticipants: FC<Props> = ({ race }) => {
                                                 width={300}
                                                 height={200}
                                                 className="object-cover w-full"
+                                                unoptimized
                                             />
                                         </Link>
                                     ))}
@@ -106,10 +107,11 @@ const RaceInfoParticipants: FC<Props> = ({ race }) => {
                                             >
                                                 <Image
                                                     src={img}
-                                                    alt={`route-image-${i}`}
+                                                    alt={`participant-image-${i}`}
                                                     width={300}
                                                     height={200}
                                                     className="object-cover w-full"
+                                                    unoptimized
                                                 />
                                             </Link>
                                         )

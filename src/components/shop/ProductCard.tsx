@@ -33,6 +33,7 @@ export default function ProductCard({ product }: Props) {
                     className="w-full h-96 max-2xl:h-72 max-xl:h-60 max-sm:h-72 object-cover"
                     width={1000}
                     height={1000}
+                    unoptimized
                 />
                 {(discountProcent || isNew) && (
                     <span

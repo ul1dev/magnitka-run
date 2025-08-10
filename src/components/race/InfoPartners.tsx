@@ -63,6 +63,7 @@ const RaceInfoPartners: FC<Props> = ({ race }) => {
                                                 className="w-32 max-sm:w-24 object-contain"
                                                 width={100}
                                                 height={100}
+                                                unoptimized
                                             />
                                         )}
                                     </Link>

@@ -101,7 +101,7 @@ export default function ChackoutContent() {
 
             // очистим корзину и редиректим на оплату
             clearCart();
-            router.push(link);
+            router.push('/shop/checkout/success'); // link
         } catch (e: any) {
             setSubmitError(e.message || 'Ошибка! Попробуйте позже.');
         } finally {

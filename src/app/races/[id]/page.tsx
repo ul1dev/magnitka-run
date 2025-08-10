@@ -47,8 +47,11 @@ async function fetchRace(id: string): Promise<Race | null> {
 }
 
 export async function generateMetadata({
-    params: { id },
-}: PageProps): Promise<Metadata> {
+    params,
+}: {
+    params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+    const { id } = await params;
     try {
         const race = await fetchRace(id);
         if (!race) return { title: 'Забег не найден' };
@@ -58,7 +61,12 @@ export async function generateMetadata({
     }
 }
 
-export default async function RacePage({ params: { id } }: PageProps) {
+export default async function RacePage({
+    params,
+}: {
+    params: Promise<{ id: string }>;
+}) {
+    const { id } = await params;
     const race = await fetchRace(id);
     if (!race) notFound();
 

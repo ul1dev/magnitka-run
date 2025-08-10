@@ -36,6 +36,7 @@ export default function CartProducts() {
                                     width={100}
                                     height={100}
                                     className="rounded w-25 h-25"
+                                    unoptimized
                                 />
                             </Link>
 

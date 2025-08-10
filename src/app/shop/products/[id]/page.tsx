@@ -41,8 +41,11 @@ async function fetchProduct(id: string): Promise<ShopProduct | null> {
 }
 
 export async function generateMetadata({
-    params: { id },
-}: PageProps): Promise<Metadata> {
+    params,
+}: {
+    params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+    const { id } = await params;
     try {
         const product = await fetchProduct(id);
         if (!product) return { title: 'Товар не найден' };
@@ -52,7 +55,12 @@ export async function generateMetadata({
     }
 }
 
-export default async function ShopProductsItem({ params: { id } }: PageProps) {
+export default async function ShopProductsItem({
+    params,
+}: {
+    params: Promise<{ id: string }>;
+}) {
+    const { id } = await params;
     const product = await fetchProduct(id);
     if (!product) notFound();
 

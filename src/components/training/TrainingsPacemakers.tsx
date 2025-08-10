@@ -31,6 +31,7 @@ const TrainingTrainingsPacemakers: FC<Props> = ({ pacemakers }) => {
                                 className="w-1/2 max-[500px]:w-full rounded-lg mb-5 max-sm:mb-4"
                                 width={200}
                                 height={200}
+                                unoptimized
                             />
                         )}
 

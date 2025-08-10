@@ -86,6 +86,7 @@ export default function ProductGallery({ imgs }: Props) {
                             className="w-full h-128 max-lg:h-96 max-md:h-120 max-sm:h-96 max-[400px]:!h-88 object-cover rounded-lg"
                             width={1000}
                             height={1000}
+                            unoptimized
                         />
                     </Link>
                 </div>
