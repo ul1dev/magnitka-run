@@ -38,7 +38,7 @@ export default function CheckoutBar({ submitting }: Props) {
             </div>
 
             <button
-                className="text-center w-full cursor-pointer text-white max-lg:py-3 py-4 rounded-b-lg font-bold text-xl max-lg:text-lg bg-[#003593]"
+                className="text-center w-full cursor-pointer text-white max-lg:py-3 py-4 rounded-b-lg font-bold text-xl max-lg:text-lg bg-[#003593] disabled:opacity-60"
                 type="submit"
                 disabled={submitting}
             >

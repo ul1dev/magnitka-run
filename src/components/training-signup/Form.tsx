@@ -1,6 +1,6 @@
 'use client';
 
-import { FC } from 'react';
+import { FC, useState } from 'react';
 import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import Datetime from 'react-datetime';
 import 'react-datetime/css/react-datetime.css';
@@ -29,12 +29,14 @@ interface FormValues {
     name: string;
     phone: string;
     email?: string;
-    directions: string[];
+    directions: string;
     level: string;
     datetime: Date | undefined;
     comments: string;
     consent: boolean;
 }
+
+const API_BASE = (process.env.NEXT_PUBLIC_API_BASE || '').replace(/\/$/, '');
 
 const TrainingSignUpForm: FC = () => {
     const {
@@ -48,16 +50,53 @@ const TrainingSignUpForm: FC = () => {
     });
 
     const router = useRouter();
+    const [submitting, setSubmitting] = useState(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
 
-    const onSubmit: SubmitHandler<FormValues> = (data) => {
-        console.log('Submitted:', data);
+    const onSubmit: SubmitHandler<FormValues> = async (data) => {
+        setSubmitting(true);
+        setSubmitError(null);
+        try {
+            const base =
+                API_BASE ||
+                (typeof window !== 'undefined' ? window.location.origin : '');
+            if (!base)
+                throw new Error('API URL не задан (NEXT_PUBLIC_API_BASE)');
 
-        const isSuccess = true;
+            if (!data.datetime) throw new Error('Выберите дату и время');
 
-        if (isSuccess) {
+            // приводим к payload DTO (directions как массив, datetime ISO)
+            const payload = {
+                name: data.name,
+                phone: data.phone,
+                email: data.email || undefined,
+                directions: data.directions,
+                level: data.level,
+                datetime: data.datetime.toISOString(),
+                comments: data.comments || undefined,
+                consent: data.consent,
+            };
+
+            const res = await fetch(`${base}/trainings/signups`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+            });
+
+            if (!res.ok) {
+                let msg = `Ошибка отправки (HTTP ${res.status})`;
+                try {
+                    const j = await res.json();
+                    msg = j?.message || msg;
+                } catch {}
+                throw new Error(msg);
+            }
+
             router.push('/training/signup/success');
-        } else {
-            alert('Ошибка! Попробуйте позже.');
+        } catch (e: any) {
+            setSubmitError(e.message || 'Ошибка! Попробуйте позже.');
+        } finally {
+            setSubmitting(false);
         }
     };
 
@@ -88,7 +127,6 @@ const TrainingSignUpForm: FC = () => {
                 )}
             </div>
 
-            {/* Контактный телефон */}
             <div>
                 <label className={labelClass} htmlFor="phone">
                     Контактный телефон:
@@ -106,7 +144,6 @@ const TrainingSignUpForm: FC = () => {
                 )}
             </div>
 
-            {/* Электронная почта */}
             <div>
                 <label className={labelClass} htmlFor="email">
                     Электронная почта (необязательно):
@@ -129,7 +166,6 @@ const TrainingSignUpForm: FC = () => {
                 )}
             </div>
 
-            {/* Направления тренировки */}
             <div>
                 <p className={`${labelClass} mb-1`}>
                     Выберите направление тренировки:
@@ -160,7 +196,6 @@ const TrainingSignUpForm: FC = () => {
                 )}
             </div>
 
-            {/* Уровень подготовки */}
             <div>
                 <p className={`${labelClass} mb-1`}>Ваш уровень подготовки:</p>
                 <div className="flex flex-col gap-1 text-base max-sm:text-sm">
@@ -187,7 +222,6 @@ const TrainingSignUpForm: FC = () => {
                 )}
             </div>
 
-            {/* Дата и время */}
             <div>
                 <label className={labelClass}>Выберите дату и время:</label>
                 <Controller
@@ -197,11 +231,12 @@ const TrainingSignUpForm: FC = () => {
                     render={({ field }) => (
                         <Datetime
                             value={field.value}
-                            onChange={(date) =>
+                            onChange={(date: any) =>
                                 field.onChange(
-                                    date instanceof Date
-                                        ? date
-                                        : (date as moment.Moment).toDate()
+                                    date?.toDate?.() ??
+                                        (date instanceof Date
+                                            ? date
+                                            : undefined)
                                 )
                             }
                             dateFormat="DD.MM.YYYY"
@@ -218,7 +253,6 @@ const TrainingSignUpForm: FC = () => {
                 )}
             </div>
 
-            {/* Комментарии */}
             <div>
                 <label className={labelClass} htmlFor="comments">
                     Комментарии или пожелания:
@@ -232,7 +266,6 @@ const TrainingSignUpForm: FC = () => {
                 />
             </div>
 
-            {/* Согласие */}
             <div>
                 <div className="inline-flex items-center">
                     <input
@@ -259,13 +292,15 @@ const TrainingSignUpForm: FC = () => {
                 )}
             </div>
 
-            {/* Кнопка отправки */}
             <button
                 type="submit"
-                className="w-full text-center rounded-2xl max-sm:rounded-xl bg-[#ea0029] max-sm:text-base max-2xl:text-xl text-2xl text-white font-semibold max-sm:py-3 max-2xl:py-4 py-5 hover:bg-[#d10026] transition-colors duration-300 cursor-pointer"
+                disabled={submitting}
+                className="w-full text-center rounded-2xl max-sm:rounded-xl bg-[#ea0029] max-sm:text-base max-2xl:text-xl text-2xl text-white font-semibold max-sm:py-3 max-2xl:py-4 py-5 hover:bg-[#d10026] transition-colors duration-300 cursor-pointer disabled:opacity-60"
             >
-                Отправить заявку
+                {submitting ? 'Отправка...' : 'Отправить заявку'}
             </button>
+
+            {submitError && <div className="text-red-600">{submitError}</div>}
         </form>
     );
 };
