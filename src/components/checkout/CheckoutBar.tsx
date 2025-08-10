@@ -2,7 +2,11 @@
 
 import { useCart } from '@/store/useCart';
 
-export default function CheckoutBar() {
+interface Props {
+    submitting: boolean;
+}
+
+export default function CheckoutBar({ submitting }: Props) {
     const {
         itemsLength,
         totalPrice,
@@ -36,8 +40,9 @@ export default function CheckoutBar() {
             <button
                 className="text-center w-full cursor-pointer text-white max-lg:py-3 py-4 rounded-b-lg font-bold text-xl max-lg:text-lg bg-[#003593]"
                 type="submit"
+                disabled={submitting}
             >
-                Оплатить
+                {submitting ? 'Отправка...' : 'Оплатить'}
             </button>
         </div>
     );
