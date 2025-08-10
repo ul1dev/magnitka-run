@@ -66,7 +66,9 @@ export default function ProductBar({ product }: Props) {
 
             {Boolean(sizes?.length) && (
                 <div className="mt-3">
-                    <p className="font-bold text-sm">Выберите {sizesTitle}</p>
+                    <p className="font-bold text-sm">
+                        Выберите {sizesTitle?.toLowerCase()}
+                    </p>
                     <div className="flex flex-wrap gap-2 max-sm:gap-1.5 mt-1">
                         {sizes?.map((size, i) => (
                             <div
