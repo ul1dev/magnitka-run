@@ -1,7 +1,6 @@
 'use client';
 
 import Image from 'next/image';
-
 import logoIcon from '@/app/static/images/logo_blue.svg';
 import Link from 'next/link';
 import HamburgerButton from './HamburgerButton';
@@ -10,10 +9,17 @@ import MobileMenu from './MobileMenu';
 import { useCart } from '@/store/useCart';
 import { usePathname } from 'next/navigation';
 
+const API_BASE =
+    (process.env.NEXT_PUBLIC_API_BASE || '').replace(/\/$/, '') || '';
+
+const DEFAULT_REG_LINK = 'https://myrace.info/events/1056';
+
 const Header = () => {
     const [menuOpen, setMenuOpen] = useState(false);
     const { itemsLength: cartItemsLength } = useCart();
     const pathname = usePathname();
+
+    const [regLink, setRegLink] = useState<string>(DEFAULT_REG_LINK);
 
     useEffect(() => {
         document.body.style.overflow = menuOpen ? 'hidden' : '';
@@ -21,6 +27,34 @@ const Header = () => {
             document.body.style.overflow = '';
         };
     }, [menuOpen]);
+
+    useEffect(() => {
+        let aborted = false;
+
+        async function load() {
+            if (!API_BASE) return;
+            try {
+                const res = await fetch(`${API_BASE}/main-options`, {
+                    cache: 'no-store',
+                });
+                if (!res.ok) return;
+                const data: { regLink?: string } = await res.json();
+                const link = data?.regLink;
+                if (
+                    !aborted &&
+                    typeof link === 'string' &&
+                    /^https?:\/\//i.test(link)
+                ) {
+                    setRegLink(link);
+                }
+            } catch {}
+        }
+
+        load();
+        return () => {
+            aborted = true;
+        };
+    }, []);
 
     return (
         <>
@@ -89,7 +123,7 @@ const Header = () => {
                     </Link>
                 ) : (
                     <Link
-                        href="https://myrace.info/events/1056"
+                        href={regLink || DEFAULT_REG_LINK}
                         className="max-lg:hidden max-xl:rounded-xl rounded-2xl bg-[#ea0029] max-xl:text-base max-2xl:text-xl text-2xl text-white font-semibold max-xl:px-18 max-xl:py-3 max-2xl:px-20 max-2xl:py-4 px-22 py-5 hover:bg-[#d10026] transition-colors duration-300"
                         target="_blank"
                     >

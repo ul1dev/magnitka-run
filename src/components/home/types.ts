@@ -36,3 +36,10 @@ export interface Race {
     routesText?: string;
     partners?: { img: string; categoryText: string; link?: string }[];
 }
+
+export interface TeamMember {
+    id: string;
+    name: string;
+    description?: string;
+    img: string;
+}

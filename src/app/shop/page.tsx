@@ -56,7 +56,13 @@ export default async function Shop() {
             <h1 className="text-4xl max-sm:text-3xl font-bold mb-8 max-lg:mb-4 max-sm:mb-2">
                 Наши товары
             </h1>
-            <ProductList products={products} />
+            {products?.length ? (
+                <ProductList products={products} />
+            ) : (
+                <p className="text-center text-lg mt-20 mb-72 max-xl:mb-80 max-lg:mb-92 max-sm:text-base">
+                    Список товаров пуст
+                </p>
+            )}
         </main>
     );
 }

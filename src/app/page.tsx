@@ -1,9 +1,10 @@
 import HomeRaces from '@/components/home/Races';
-import { Race } from '@/components/home/types';
+import { Race, TeamMember } from '@/components/home/types';
 import HomeGalary from '@/components/home/Galary';
 import HomeTimer from '@/components/home/Timer';
 
 import bgImg from '@/app/static/images/ZEA_0745_1.jpg.webp';
+import HomeTeams from '@/components/home/Team';
 
 const API_BASE =
     process.env.NEXT_PUBLIC_API_BASE?.replace(/\/$/, '') ??
@@ -37,8 +38,20 @@ async function getRaces(): Promise<Race[]> {
     }));
 }
 
+async function getTeamMembers(): Promise<TeamMember[]> {
+    const res = await fetch(`${API_BASE}/team`, { cache: 'no-store' });
+    if (!res.ok) throw new Error(`Failed to load races: ${res.status}`);
+    const data = (await res.json()) as TeamMember[];
+
+    return data.map((r) => ({
+        ...r,
+        img: norm(r.img) || '',
+    }));
+}
+
 export default async function Home() {
     const races = await getRaces();
+    const teamMembers = await getTeamMembers();
 
     return (
         <>
@@ -65,6 +78,10 @@ export default async function Home() {
             <HomeGalary />
 
             <HomeTimer />
+
+            {teamMembers?.length && teamMembers?.length > 0 && (
+                <HomeTeams items={teamMembers} />
+            )}
         </>
     );
 }

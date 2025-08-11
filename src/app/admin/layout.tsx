@@ -14,6 +14,12 @@ export default function AdminLayout({
                         <Link href="/admin" className="hover:underline">
                             Панель управления
                         </Link>
+                        <Link
+                            href="/admin/main-options"
+                            className="hover:underline"
+                        >
+                            Общие параметры
+                        </Link>
                         <Link href="/admin/races" className="hover:underline">
                             Забеги
                         </Link>
@@ -31,6 +37,9 @@ export default function AdminLayout({
                         </Link>
                         <Link href="/admin/shop" className="hover:underline">
                             Магазин
+                        </Link>
+                        <Link href="/admin/team" className="hover:underline">
+                            Команда
                         </Link>
                     </nav>
                 </aside>

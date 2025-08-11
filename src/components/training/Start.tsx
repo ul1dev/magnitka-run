@@ -13,7 +13,7 @@ const TrainingStart: FC = () => {
                     Тренировки <br /> с беговым движением <br /> "Азия-европа"
                 </h1>
                 <Link
-                    href="https://myrace.info/events/1056"
+                    href="https://t.me/Asiaeuropemgn"
                     className="w-fit max-lg:rounded-xl rounded-2xl bg-[#ea0029] max-lg:text-base max-2xl:text-xl text-2xl text-white font-semibold max-lg:px-22 max-lg:py-3 max-2xl:px-24 max-2xl:py-4 px-26 py-5 hover:bg-[#d10026] transition-colors duration-300"
                     target="_blank"
                 >
