@@ -6,6 +6,7 @@ import Datetime from 'react-datetime';
 import 'react-datetime/css/react-datetime.css';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { toUtcPlusHours } from './assets';
 
 interface Option {
     label: string;
@@ -65,14 +66,13 @@ const TrainingSignUpForm: FC = () => {
 
             if (!data.datetime) throw new Error('Выберите дату и время');
 
-            // приводим к payload DTO (directions как массив, datetime ISO)
             const payload = {
                 name: data.name,
                 phone: data.phone,
                 email: data.email || undefined,
                 directions: data.directions,
                 level: data.level,
-                datetime: data.datetime.toISOString(),
+                datetime: toUtcPlusHours(data.datetime!, 5),
                 comments: data.comments || undefined,
                 consent: data.consent,
             };
