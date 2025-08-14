@@ -20,7 +20,7 @@ const RaceInfoVolunteers: FC = () => {
                     <div className="max-sm:text-sm">
                         Набор волонтёров{' '}
                         <Link
-                            href="https://forms.gle/W6kQGx2xmMu1WWdJ8"
+                            href="https://docs.google.com/forms/d/e/1FAIpQLSfODT3RwzPnemfOHKCWMLsBWPp8DQgAET24JuJn8Othr0XFqQ/viewform"
                             className="text-[#e62229] underline"
                             target="_blank"
                         >
