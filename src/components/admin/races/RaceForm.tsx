@@ -9,7 +9,13 @@ type Props = {
     id?: string; // если редактирование
 };
 
-type PartnerRow = { categoryText: string; link: string; file?: File | null };
+type PartnerRow = {
+    categoryText: string;
+    link: string;
+    file?: File | null;
+    prevImg?: string | null; // текущее (старое) изображение строки
+    origIndex?: number | null; // исходный индекс в initial.partners
+};
 
 function FileInput({
     name,
@@ -119,20 +125,29 @@ export default function RaceForm({ initial, id }: Props) {
         initial?.btnsPosition ?? 'top-right'
     );
 
-    // партнёры
     const initialPartners: PartnerRow[] = useMemo(() => {
         const src = (initial?.partners as any[]) || [];
-        return src.map((p) => ({
+        return src.map((p, idx) => ({
             categoryText: p?.categoryText ?? '',
             link: p?.link ?? '',
             file: null,
+            prevImg: p?.img ?? null,
+            origIndex: idx, // фиксируем откуда пришёл этот партнёр
         }));
     }, [initial?.partners]);
 
     const [partners, setPartners] = useState<PartnerRow[]>(
         initialPartners.length
             ? initialPartners
-            : [{ categoryText: '', link: '', file: null }]
+            : [
+                  {
+                      categoryText: '',
+                      link: '',
+                      file: null,
+                      prevImg: null,
+                      origIndex: null,
+                  },
+              ]
     );
     const [partnersChanged, setPartnersChanged] = useState(false);
 
@@ -161,69 +176,78 @@ export default function RaceForm({ initial, id }: Props) {
         const formEl = e.currentTarget;
         const fd = new FormData(formEl);
 
-        // служебные
+        // служебные радио-инпуты убираем
         fd.delete('isRegBtn_radio');
         fd.delete('isMoreBtn_radio');
 
-        // флаги
+        // флаги / позиция кнопок
         fd.set('isRegBtn', String(isRegBtn));
         fd.set('isMoreBtn', String(isMoreBtn));
-        if (isRegBtn || isMoreBtn)
+        if (isRegBtn || isMoreBtn) {
             fd.set('btnsPosition', btnsPosition ?? 'top-left');
-
-        // ПАРТНЁРЫ: шлём мету только если создаём или были изменения
-        const isCreate = !id;
-        const hasAnyPartnerFile = partners.some((p) => !!p.file);
-
-        if (hasAnyPartnerFile) {
-            // требуем файл у каждого — иначе индексы собьются на бэке
-            const allHave = partners.every((p) => !!p.file);
-            if (!allHave) {
-                setLoading(false);
-                setError(
-                    'Если меняете картинки партнёров, загрузите изображения для всех партнёров по порядку.'
-                );
-                return;
-            }
         }
 
-        if (isCreate || partnersChanged || hasAnyPartnerFile) {
-            const partnersMeta = partners.map((p) => ({
+        // ===== Партнёры =====
+        // В meta шлём categoryText/link + origIndex; если файл НЕ выбран и есть prevImg — кладём img, чтобы сохранить старую
+        const partnersMeta = partners.map((p) => {
+            const base: {
+                categoryText: string;
+                link: string;
+                origIndex: number | null;
+                img?: string | null;
+            } = {
                 categoryText: p.categoryText,
                 link: p.link,
-            }));
-            fd.set('partners', JSON.stringify(partnersMeta));
+                origIndex: Number.isInteger(p.origIndex)
+                    ? (p.origIndex as number)
+                    : null,
+            };
+            if (!p.file && p.prevImg) base.img = p.prevImg;
+            return base;
+        });
 
-            if (hasAnyPartnerFile) {
-                partners.forEach((p) => {
-                    // по порядку — под каждую запись партнёра свой файл
-                    fd.append('partnersImgs[]', p.file as File);
-                });
+        fd.set('partners', JSON.stringify(partnersMeta));
+
+        // Файлы партнёров кладём по индексным ключам partnerImg_<i>, только если файл выбран у этой строки
+        partners.forEach((p, idx) => {
+            if (p.file) {
+                fd.append(`partnerImg_${idx}`, p.file);
             }
-        }
+        });
 
         try {
             if (id) {
+                // Редактирование
                 await adminFetch(`/races/${id}`, {
                     method: 'PATCH',
                     formData: fd,
                     requireSecret: true,
                 });
             } else {
+                // Создание
                 await adminFetch(`/races`, {
                     method: 'POST',
                     formData: fd,
                     requireSecret: true,
                 });
                 formEl.reset();
-                setPartners([{ categoryText: '', link: '', file: null }]);
+                setPartners([
+                    {
+                        categoryText: '',
+                        link: '',
+                        file: null,
+                        prevImg: null,
+                        origIndex: null,
+                    },
+                ]);
                 setIsRegBtn(false);
                 setIsMoreBtn(false);
                 setBtnsPos('top-left');
             }
             alert('Сохранено');
-        } catch (err: any) {
-            setError(err.message || 'Ошибка сохранения');
+        } catch (err) {
+            const msg = (err as Error)?.message || 'Ошибка сохранения';
+            setError(msg);
         } finally {
             setLoading(false);
         }
@@ -659,17 +683,10 @@ export default function RaceForm({ initial, id }: Props) {
                                         <label className="text-sm opacity-70">
                                             Картинка партнёра
                                         </label>
-                                        {(initial?.partners?.[idx] as any)
-                                            ?.img && (
+                                        {p.prevImg && (
                                             <div className="flex items-center gap-3">
                                                 <img
-                                                    src={
-                                                        (
-                                                            initial?.partners?.[
-                                                                idx
-                                                            ] as any
-                                                        ).img
-                                                    }
+                                                    src={p.prevImg}
                                                     className="h-12 w-12 object-cover rounded-md border"
                                                     alt=""
                                                 />
@@ -678,15 +695,16 @@ export default function RaceForm({ initial, id }: Props) {
                                                 </span>
                                             </div>
                                         )}
+
                                         <FileInput
-                                            name="partnersImgs[]"
+                                            name={`partnerImg_${idx}`}
                                             buttonText="Выбрать файл"
                                             onFiles={(fl) =>
                                                 updatePartner(idx, {
                                                     file: fl?.[0] ?? null,
                                                 })
                                             }
-                                            hint="При редактировании старые изображения партнёров будут заменены."
+                                            hint="Заменит картинку только у этого партнёра."
                                         />
                                     </div>
                                 </div>
