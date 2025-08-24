@@ -186,7 +186,9 @@ const RaceInfoParticipants: FC<Props> = ({ race }) => {
                         <li>
                             Ознакомиться и согласиться с{' '}
                             <Link
-                                href={'/privacy'}
+                                href={
+                                    'https://drive.google.com/file/d/1HaLyZpEv4-SQ3Cw8iYjaowdiWdjk3JsB/view'
+                                }
                                 className="text-[#e62229] underline"
                                 target="_blank"
                             >
