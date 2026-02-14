@@ -35,6 +35,10 @@ async function getRaces(): Promise<Race[]> {
             ...p,
             img: norm(p.img) || '', // в типе у тебя img: string
         })),
+        pressBlocks: r.pressBlocks?.map((pb) => ({
+            ...pb,
+            img: norm(pb.img) || '',
+        })),
     }));
 }
 

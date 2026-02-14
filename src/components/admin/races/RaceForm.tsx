@@ -17,6 +17,13 @@ type PartnerRow = {
     origIndex?: number | null; // исходный индекс в initial.partners
 };
 
+type PressBlockRow = {
+    url: string;
+    file?: File | null;
+    prevImg?: string | null;
+    origIndex?: number | null;
+};
+
 function FileInput({
     name,
     multiple,
@@ -151,6 +158,34 @@ export default function RaceForm({ initial, id }: Props) {
     );
     const [partnersChanged, setPartnersChanged] = useState(false);
 
+    /* ---- Пресс-блоки ---- */
+    const initialPressBlocks: PressBlockRow[] = useMemo(() => {
+        const src = (initial?.pressBlocks as any[]) || [];
+        return src.map((pb, idx) => ({
+            url: pb?.url ?? '',
+            file: null,
+            prevImg: pb?.img ?? null,
+            origIndex: idx,
+        }));
+    }, [initial?.pressBlocks]);
+
+    const [pressBlocks, setPressBlocks] = useState<PressBlockRow[]>(
+        initialPressBlocks.length ? initialPressBlocks : []
+    );
+
+    const addPressBlock = () =>
+        setPressBlocks((prev) => [
+            ...prev,
+            { url: '', file: null, prevImg: null, origIndex: null },
+        ]);
+    const removePressBlock = (idx: number) =>
+        setPressBlocks((prev) => prev.filter((_, i) => i !== idx));
+
+    const updatePressBlock = (idx: number, patch: Partial<PressBlockRow>) =>
+        setPressBlocks((prev) =>
+            prev.map((pb, i) => (i === idx ? { ...pb, ...patch } : pb))
+        );
+
     const addPartner = () =>
         setPartners((prev) => [
             ...prev,
@@ -215,6 +250,30 @@ export default function RaceForm({ initial, id }: Props) {
             }
         });
 
+        // ===== Пресс-блоки =====
+        const pressBlocksMeta = pressBlocks.map((pb) => {
+            const base: {
+                url: string;
+                origIndex: number | null;
+                img?: string | null;
+            } = {
+                url: pb.url,
+                origIndex: Number.isInteger(pb.origIndex)
+                    ? (pb.origIndex as number)
+                    : null,
+            };
+            if (!pb.file && pb.prevImg) base.img = pb.prevImg;
+            return base;
+        });
+
+        fd.set('pressBlocks', JSON.stringify(pressBlocksMeta));
+
+        pressBlocks.forEach((pb, idx) => {
+            if (pb.file) {
+                fd.append(`pressBlockImg_${idx}`, pb.file);
+            }
+        });
+
         try {
             if (id) {
                 // Редактирование
@@ -240,6 +299,7 @@ export default function RaceForm({ initial, id }: Props) {
                         origIndex: null,
                     },
                 ]);
+                setPressBlocks([]);
                 setIsRegBtn(false);
                 setIsMoreBtn(false);
                 setBtnsPos('top-left');
@@ -724,6 +784,90 @@ export default function RaceForm({ initial, id }: Props) {
                         {partners.length === 0 && (
                             <div className="text-sm opacity-60">
                                 Партнёров пока нет.
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Пресса */}
+                    <div className="rounded-2xl border p-4 max-sm:p-2 grid gap-4">
+                        <div className="flex items-center justify-between">
+                            <h3 className="font-semibold">Пресса</h3>
+                            <button
+                                type="button"
+                                onClick={addPressBlock}
+                                className="rounded-xl px-3 py-2 bg-black text-white"
+                            >
+                                Добавить статью
+                            </button>
+                        </div>
+
+                        {pressBlocks.map((pb, idx) => (
+                            <div
+                                key={idx}
+                                className="border rounded-xl p-3 flex gap-6 max-sm:flex-col-reverse max-sm:gap-1"
+                            >
+                                <div className="grid gap-3 w-full">
+                                    <div className="grid gap-2">
+                                        <label className="text-sm opacity-70">
+                                            Ссылка на статью
+                                        </label>
+                                        <input
+                                            className="border rounded-xl px-3 py-2"
+                                            placeholder="https://..."
+                                            value={pb.url}
+                                            onChange={(e) =>
+                                                updatePressBlock(idx, {
+                                                    url: e.target.value,
+                                                })
+                                            }
+                                        />
+                                    </div>
+
+                                    <div className="grid gap-2">
+                                        <label className="text-sm opacity-70">
+                                            Картинка статьи
+                                        </label>
+                                        {pb.prevImg && (
+                                            <div className="flex items-center gap-3">
+                                                <img
+                                                    src={pb.prevImg}
+                                                    className="h-16 w-24 object-cover rounded-md border"
+                                                    alt=""
+                                                />
+                                                <span className="text-xs opacity-60">
+                                                    Текущее изображение
+                                                </span>
+                                            </div>
+                                        )}
+
+                                        <FileInput
+                                            name={`pressBlockImg_${idx}`}
+                                            buttonText="Выбрать файл"
+                                            onFiles={(fl) =>
+                                                updatePressBlock(idx, {
+                                                    file: fl?.[0] ?? null,
+                                                })
+                                            }
+                                            hint="Заменит картинку только у этой статьи."
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="flex h-fit justify-end">
+                                    <button
+                                        type="button"
+                                        onClick={() => removePressBlock(idx)}
+                                        className="px-3 py-2 rounded-xl border text-red-600"
+                                    >
+                                        Удалить
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+
+                        {pressBlocks.length === 0 && (
+                            <div className="text-sm opacity-60">
+                                Статей пока нет.
                             </div>
                         )}
                     </div>

@@ -35,6 +35,7 @@ export interface Race {
     routesImgs?: string[];
     routesText?: string;
     partners?: { img: string; categoryText: string; link?: string }[];
+    pressBlocks?: { img: string; url: string }[];
 }
 
 export interface TeamMember {

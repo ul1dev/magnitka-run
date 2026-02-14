@@ -9,6 +9,7 @@ import RaceInfoAbout from './InfoAbout';
 import RaceInfoParticipants from './InfoParticipants';
 import RaceInfoVolunteers from './InfoVolunteers';
 import RaceInfoPartners from './InfoPartners';
+import RaceInfoPress from './InfoPress';
 import RaceInfoContacts from './InfoContacts';
 
 import '@fancyapps/ui/dist/fancybox/fancybox.css';
@@ -22,8 +23,13 @@ const RaceInfo: FC<Props> = ({ race }) => {
         { id: 'about', label: 'О забеге' },
         { id: 'participants', label: 'Участникам' },
         { id: 'volunteers', label: 'Волонтерам' },
-        { id: 'contacts', label: 'Контакты' },
     ];
+
+    if (race?.pressBlocks?.length) {
+        navItems.push({ id: 'press', label: 'Пресса' });
+    }
+
+    navItems.push({ id: 'contacts', label: 'Контакты' });
 
     if (race?.partners?.length) {
         navItems.push({ id: 'partners', label: 'Партнеры' });
@@ -56,6 +62,7 @@ const RaceInfo: FC<Props> = ({ race }) => {
                 <RaceInfoAbout race={race} />
                 <RaceInfoParticipants race={race} />
                 <RaceInfoVolunteers />
+                <RaceInfoPress race={race} />
                 <RaceInfoContacts />
                 <RaceInfoPartners race={race} />
             </div>

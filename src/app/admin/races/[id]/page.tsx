@@ -25,6 +25,10 @@ function normRace(r: Race): Race {
         participantPackageImgs: normArr(r.participantPackageImgs),
         routesImgs: normArr(r.routesImgs),
         partners: r.partners?.map((p) => ({ ...p, img: norm(p.img) || '' })),
+        pressBlocks: r.pressBlocks?.map((pb) => ({
+            ...pb,
+            img: norm(pb.img) || '',
+        })),
     };
 }
 

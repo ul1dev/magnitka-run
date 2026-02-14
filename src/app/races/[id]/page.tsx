@@ -43,6 +43,10 @@ async function fetchRace(id: string): Promise<Race | null> {
             ...p,
             img: norm(p.img) || '', // в типе img: string
         })),
+        pressBlocks: r.pressBlocks?.map((pb) => ({
+            ...pb,
+            img: norm(pb.img) || '',
+        })),
     };
 }
 
