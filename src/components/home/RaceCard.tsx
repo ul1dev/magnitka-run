@@ -31,7 +31,10 @@ const RaceCard: FC<Props> = ({ item }) => {
         bgColor,
         cardBgImg,
         btnsPosition,
+        date,
     } = item;
+
+    const isPast = date ? new Date(date).getTime() < Date.now() : false;
 
     const [yPos, xPos] = btnsPosition?.split('-') || [];
 
@@ -62,7 +65,7 @@ const RaceCard: FC<Props> = ({ item }) => {
                 {
                     'duration-700 hover:scale-102 transition-all cursor-pointer':
                         isMoreBtn,
-                }
+                },
             )}
             style={{
                 backgroundImage: `url(${cardBgImg})`,
@@ -102,7 +105,7 @@ const RaceCard: FC<Props> = ({ item }) => {
                         'flex sm:flex-col gap-3 max-[500px]:gap-1.5 max-[400px]:gap-1',
                         {
                             'max-sm:mt-6': cardTitle,
-                        }
+                        },
                     )}
                 >
                     {isRegBtn && (
@@ -117,7 +120,7 @@ const RaceCard: FC<Props> = ({ item }) => {
                                 bgColor={regBtnBgColor}
                                 isBigOnSm={Boolean(cardTitle)}
                             >
-                                Регистрация
+                                {isPast ? 'Результаты' : 'Регистрация'}
                             </CardBtn>
                         </Link>
                     )}
