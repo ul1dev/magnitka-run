@@ -15,6 +15,12 @@ export default function AdminLayout({
                             Панель управления
                         </Link>
                         <Link
+                            href="/admin/main-page"
+                            className="hover:underline"
+                        >
+                            Главная
+                        </Link>
+                        <Link
                             href="/admin/main-options"
                             className="hover:underline"
                         >

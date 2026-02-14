@@ -1,7 +1,7 @@
 'use client';
 
 import { FC, useEffect, useRef, useState } from 'react';
-import Image from 'next/image';
+import Image, { StaticImageData } from 'next/image';
 
 import img3 from '@/app/static/images/_20.jpg.webp';
 import img4 from '@/app/static/images/ZEA_0745_1.jpg.webp';
@@ -14,14 +14,28 @@ import img10 from '@/app/static/images/_11.jpg.webp';
 import img11 from '@/app/static/images/_8.jpg.webp';
 import img12 from '@/app/static/images/_10.jpg.webp';
 
-const topImages = [
+export type GalleryImage = {
+    id: string;
+    src: string;
+    size: number;
+    order: number;
+};
+
+type GalItem = { src: string | StaticImageData; size: number };
+
+type Props = {
+    firstLineImgs?: GalleryImage[] | null;
+    secondLineImgs?: GalleryImage[] | null;
+};
+
+const defaultTopImages: GalItem[] = [
     { src: img8, size: 445 },
     { src: img7, size: 270 },
     { src: img6, size: 450 },
     { src: img5, size: 350 },
     { src: img9, size: 390 },
 ];
-const bottomImages = [
+const defaultBottomImages: GalItem[] = [
     { src: img10, size: 400 },
     { src: img12, size: 400 },
     { src: img4, size: 540 },
@@ -29,7 +43,23 @@ const bottomImages = [
     { src: img3, size: 540 },
 ];
 
-const HomeGalary: FC = () => {
+const HomeGalary: FC<Props> = ({ firstLineImgs, secondLineImgs }) => {
+    const topImages: GalItem[] =
+        firstLineImgs && firstLineImgs.length > 0
+            ? firstLineImgs.map((img) => ({
+                  src: img.src,
+                  size: Math.min(Number(img.size), 550),
+              }))
+            : defaultTopImages;
+
+    const bottomImages: GalItem[] =
+        secondLineImgs && secondLineImgs.length > 0
+            ? secondLineImgs.map((img) => ({
+                  src: img.src,
+                  size: Math.min(Number(img.size), 550),
+              }))
+            : defaultBottomImages;
+
     const containerRef = useRef<HTMLDivElement>(null);
     const [reps, setReps] = useState(1);
     const [spacing, setSpacing] = useState(16);

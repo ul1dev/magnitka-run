@@ -1,6 +1,6 @@
 import HomeRaces from '@/components/home/Races';
 import { Race, TeamMember } from '@/components/home/types';
-import HomeGalary from '@/components/home/Galary';
+import HomeGalary, { GalleryImage } from '@/components/home/Galary';
 import HomeTimer from '@/components/home/Timer';
 
 import bgImg from '@/app/static/images/ZEA_0745_1.jpg.webp';
@@ -49,15 +49,62 @@ async function getTeamMembers(): Promise<TeamMember[]> {
     }));
 }
 
+interface MainPageData {
+    id?: string;
+    mainBgImg: string | null;
+    galleryFirstLineImgs: GalleryImage[] | null;
+    gallerySecondLineImgs: GalleryImage[] | null;
+    createdAt?: string;
+    updatedAt?: string;
+}
+
+async function getMainPage(): Promise<MainPageData> {
+    try {
+        const res = await fetch(`${API_BASE}/main-page`, {
+            cache: 'no-store',
+        });
+        if (!res.ok) {
+            return {
+                mainBgImg: null,
+                galleryFirstLineImgs: null,
+                gallerySecondLineImgs: null,
+            };
+        }
+        return (await res.json()) as MainPageData;
+    } catch {
+        return {
+            mainBgImg: null,
+            galleryFirstLineImgs: null,
+            gallerySecondLineImgs: null,
+        };
+    }
+}
+
 export default async function Home() {
     const races = await getRaces();
     const teamMembers = await getTeamMembers();
+    const mainPage = await getMainPage();
+
+    const heroBg =
+        (mainPage.mainBgImg && norm(mainPage.mainBgImg)) || bgImg.src;
+
+    const firstLineImgs =
+        mainPage.galleryFirstLineImgs?.map((img) => ({
+            ...img,
+            src: norm(img.src) ?? img.src,
+        })) ?? null;
+
+    const secondLineImgs =
+        mainPage.gallerySecondLineImgs?.map((img) => ({
+            ...img,
+            src: norm(img.src) ?? img.src,
+        })) ?? null;
 
     return (
         <>
             <div
                 style={{
-                    backgroundImage: `url(${bgImg.src})`,
+                    backgroundImage: `url(${heroBg})`,
                 }}
                 className="max-xl:bg-cover max-xl:bg-center bg-no-repeat xl:bg-[size:110%_auto] xl:bg-[position:90%_70%] h-[110vh] max-2xl:h-screen flex flex-col items-center justify-center text-white text-center"
             >
@@ -75,7 +122,10 @@ export default async function Home() {
 
             <HomeRaces items={races} />
 
-            <HomeGalary />
+            <HomeGalary
+                firstLineImgs={firstLineImgs}
+                secondLineImgs={secondLineImgs}
+            />
 
             <HomeTimer />
 
