@@ -23,9 +23,41 @@ type MainPageData = {
     mainBgImg: string | null;
     galleryFirstLineImgs: GalleryImage[] | null;
     gallerySecondLineImgs: GalleryImage[] | null;
+    mainTimerDate?: string;
     createdAt?: string;
     updatedAt?: string;
 };
+
+/** Конвертирует "2025-09-07" → "07.09" для отображения */
+function toDayMonth(isoDate?: string | null): string {
+    if (!isoDate) return '';
+    const parts = isoDate.split('-');
+    if (parts.length !== 3) return '';
+    const [, month, day] = parts;
+    return `${day}.${month}`;
+}
+
+/** Валидация DD.MM: день 1-31, месяц 1-12 */
+function validateDayMonth(value: string): string | null {
+    const trimmed = value.trim();
+    if (!trimmed) return 'Введите дату';
+    const match = trimmed.match(/^(\d{1,2})\.(\d{1,2})$/);
+    if (!match) return 'Формат: ДД.ММ (например 07.09)';
+    const day = parseInt(match[1], 10);
+    const month = parseInt(match[2], 10);
+    if (month < 1 || month > 12) return 'Месяц от 1 до 12';
+    if (day < 1 || day > 31) return 'День от 1 до 31';
+    const daysInMonth = new Date(2024, month, 0).getDate();
+    if (day > daysInMonth) return `В ${month} месяце максимум ${daysInMonth} дней`;
+    return null;
+}
+
+/** Преобразует DD.MM в YYYY-MM-DD с текущим годом */
+function toIsoDate(dayMonth: string): string {
+    const [day, month] = dayMonth.split('.').map((s) => s.padStart(2, '0'));
+    const year = new Date().getFullYear();
+    return `${year}-${month}-${day}`;
+}
 
 export default function MainPageForm() {
     const [data, setData] = useState<MainPageData | null>(null);
@@ -35,6 +67,11 @@ export default function MainPageForm() {
     const [bgUploading, setBgUploading] = useState(false);
     const [bgFileName, setBgFileName] = useState('Файл не выбран');
     const bgInputRef = useRef<HTMLInputElement>(null);
+
+    /* ---- timer date ---- */
+    const [timerDateInput, setTimerDateInput] = useState('');
+    const [timerDateError, setTimerDateError] = useState<string | null>(null);
+    const [timerDateSaving, setTimerDateSaving] = useState(false);
 
     /* ---- gallery uploads ---- */
     const [firstLineUploading, setFirstLineUploading] = useState(false);
@@ -62,6 +99,14 @@ export default function MainPageForm() {
     useEffect(() => {
         load();
     }, []);
+
+    useEffect(() => {
+        if (data?.mainTimerDate) {
+            setTimerDateInput(toDayMonth(data.mainTimerDate));
+        } else {
+            setTimerDateInput('');
+        }
+    }, [data?.mainTimerDate]);
 
     /* =========== replace bg =========== */
     async function handleBgUpload() {
@@ -137,6 +182,34 @@ export default function MainPageForm() {
             alert(err?.message || 'Ошибка загрузки');
         } finally {
             setUploading(false);
+        }
+    }
+
+    /* =========== timer date =========== */
+    async function handleTimerDateSave() {
+        const err = validateDayMonth(timerDateInput);
+        setTimerDateError(err ?? null);
+        if (err) return;
+
+        setTimerDateSaving(true);
+        try {
+            const isoDate = toIsoDate(timerDateInput.trim());
+            const result = await adminFetch<MainPageData>(
+                '/main-page/main-timer-date',
+                {
+                    method: 'PUT',
+                    json: { mainTimerDate: isoDate },
+                    requireSecret: true,
+                },
+            );
+            setData(result);
+            setTimerDateError(null);
+            alert('Дата таймера обновлена');
+        } catch (e: unknown) {
+            const errMsg = (e as { message?: string })?.message;
+            setTimerDateError(errMsg || 'Ошибка сохранения');
+        } finally {
+            setTimerDateSaving(false);
         }
     }
 
@@ -222,6 +295,46 @@ export default function MainPageForm() {
                         {bgUploading ? 'Загрузка…' : 'Заменить фон'}
                     </button>
                 </div>
+            </section>
+
+            <hr />
+
+            {/* ====== Дата таймера ====== */}
+            <section className="grid gap-4">
+                <h2 className="text-lg font-semibold">Дата таймера</h2>
+                <p className="text-sm opacity-70">
+                    Дата события для обратного отсчёта. Вводите только день и
+                    месяц (ДД.ММ), год подставится текущий.
+                </p>
+                {data?.mainTimerDate && (
+                    <div className="text-sm opacity-60">
+                        Текущее значение: {toDayMonth(data.mainTimerDate)}
+                    </div>
+                )}
+                <div className="flex items-center gap-3 flex-wrap">
+                    <input
+                        type="text"
+                        value={timerDateInput}
+                        onChange={(e) => {
+                            setTimerDateInput(e.target.value);
+                            setTimerDateError(null);
+                        }}
+                        placeholder="07.09"
+                        className="border rounded-xl px-3 py-2 w-24"
+                        maxLength={5}
+                    />
+                    <button
+                        type="button"
+                        onClick={handleTimerDateSave}
+                        disabled={timerDateSaving}
+                        className="rounded-xl px-4 py-2 bg-green-600 text-white disabled:opacity-50"
+                    >
+                        {timerDateSaving ? 'Сохранение…' : 'Сохранить дату'}
+                    </button>
+                </div>
+                {timerDateError && (
+                    <div className="text-sm text-red-600">{timerDateError}</div>
+                )}
             </section>
 
             <hr />

@@ -58,6 +58,7 @@ interface MainPageData {
     mainBgImg: string | null;
     galleryFirstLineImgs: GalleryImage[] | null;
     gallerySecondLineImgs: GalleryImage[] | null;
+    mainTimerDate: string;
     createdAt?: string;
     updatedAt?: string;
 }
@@ -72,6 +73,7 @@ async function getMainPage(): Promise<MainPageData> {
                 mainBgImg: null,
                 galleryFirstLineImgs: null,
                 gallerySecondLineImgs: null,
+                mainTimerDate: '2026-09-06',
             };
         }
         return (await res.json()) as MainPageData;
@@ -80,6 +82,7 @@ async function getMainPage(): Promise<MainPageData> {
             mainBgImg: null,
             galleryFirstLineImgs: null,
             gallerySecondLineImgs: null,
+            mainTimerDate: '2026-09-06',
         };
     }
 }
@@ -131,7 +134,17 @@ export default async function Home() {
                 secondLineImgs={secondLineImgs}
             />
 
-            <HomeTimer />
+            <HomeTimer
+                targetDate={
+                    mainPage.mainTimerDate
+                        ? (() => {
+                              const [, month, day] =
+                                  mainPage.mainTimerDate.split('-');
+                              return `${day}.${month}`;
+                          })()
+                        : undefined
+                }
+            />
 
             {teamMembers?.length && teamMembers?.length > 0 && (
                 <HomeTeams items={teamMembers} />
