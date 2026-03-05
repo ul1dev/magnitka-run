@@ -104,8 +104,12 @@ const TrainingTrainings: FC = () => {
 
             <div className="lg:w-3/4 space-y-16 max-sm:space-y-8">
                 <TrainingTrainingsFormats />
-                <TrainingTrainingsTrainers trainers={trainers} />
-                <TrainingTrainingsPacemakers pacemakers={pacemakers} />
+                {trainers.length > 0 && (
+                    <TrainingTrainingsTrainers trainers={trainers} />
+                )}
+                {pacemakers.length > 0 && (
+                    <TrainingTrainingsPacemakers pacemakers={pacemakers} />
+                )}
             </div>
         </div>
     );

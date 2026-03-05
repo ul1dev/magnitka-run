@@ -19,38 +19,74 @@ function normArr(a?: (string | null | undefined)[]): string[] | undefined {
     return a.map(norm).filter((x): x is string => Boolean(x)); // сузили до string[]
 }
 
-async function getRaces(): Promise<Race[]> {
-    const res = await fetch(`${API_BASE}/races`, { cache: 'no-store' });
-    if (!res.ok) throw new Error(`Failed to load races: ${res.status}`);
-    const data = (await res.json()) as Race[];
+type LoadResult<T> = { data: T; error?: string };
 
-    return data.map((r) => ({
-        ...r,
-        cardBgImg: norm(r.cardBgImg),
-        mainBgImg: norm(r.mainBgImg),
-        aboutImgs: normArr(r.aboutImgs),
-        participantPackageImgs: normArr(r.participantPackageImgs),
-        routesImgs: normArr(r.routesImgs),
-        partners: r.partners?.map((p) => ({
-            ...p,
-            img: norm(p.img) || '', // в типе у тебя img: string
-        })),
-        pressBlocks: r.pressBlocks?.map((pb) => ({
-            ...pb,
-            img: norm(pb.img) || '',
-        })),
-    }));
+async function getRaces(): Promise<LoadResult<Race[]>> {
+    try {
+        const res = await fetch(`${API_BASE}/races`, { cache: 'no-store' });
+        if (!res.ok) {
+            return {
+                data: [],
+                error: `Не удалось загрузить список забегов (HTTP ${res.status}).`,
+            };
+        }
+        const data = (await res.json()) as Race[];
+
+        return {
+            data: data.map((r) => ({
+                ...r,
+                cardBgImg: norm(r.cardBgImg),
+                mainBgImg: norm(r.mainBgImg),
+                aboutImgs: normArr(r.aboutImgs),
+                participantPackageImgs: normArr(r.participantPackageImgs),
+                routesImgs: normArr(r.routesImgs),
+                partners: r.partners?.map((p) => ({
+                    ...p,
+                    img: norm(p.img) || '', // в типе у тебя img: string
+                })),
+                pressBlocks: r.pressBlocks?.map((pb) => ({
+                    ...pb,
+                    img: norm(pb.img) || '',
+                })),
+            })),
+        };
+    } catch (e) {
+        return {
+            data: [],
+            error:
+                e instanceof Error
+                    ? `Не удалось загрузить список забегов: ${e.message}`
+                    : 'Не удалось загрузить список забегов.',
+        };
+    }
 }
 
-async function getTeamMembers(): Promise<TeamMember[]> {
-    const res = await fetch(`${API_BASE}/team`, { cache: 'no-store' });
-    if (!res.ok) throw new Error(`Failed to load races: ${res.status}`);
-    const data = (await res.json()) as TeamMember[];
+async function getTeamMembers(): Promise<LoadResult<TeamMember[]>> {
+    try {
+        const res = await fetch(`${API_BASE}/team`, { cache: 'no-store' });
+        if (!res.ok) {
+            return {
+                data: [],
+                error: `Не удалось загрузить команду (HTTP ${res.status}).`,
+            };
+        }
+        const data = (await res.json()) as TeamMember[];
 
-    return data.map((r) => ({
-        ...r,
-        img: norm(r.img) || '',
-    }));
+        return {
+            data: data.map((r) => ({
+                ...r,
+                img: norm(r.img) || '',
+            })),
+        };
+    } catch (e) {
+        return {
+            data: [],
+            error:
+                e instanceof Error
+                    ? `Не удалось загрузить команду: ${e.message}`
+                    : 'Не удалось загрузить команду.',
+        };
+    }
 }
 
 interface MainPageData {
@@ -88,9 +124,45 @@ async function getMainPage(): Promise<MainPageData> {
 }
 
 export default async function Home() {
-    const races = await getRaces();
-    const teamMembers = await getTeamMembers();
-    const mainPage = await getMainPage();
+    const [racesRes, teamRes, mainPage] = await Promise.all([
+        getRaces(),
+        getTeamMembers(),
+        getMainPage(),
+    ]);
+
+    const placeholderRaces: Race[] = [
+        {
+            id: 'placeholder-1',
+            title: 'Скоро',
+            date: '2099-01-01',
+            cardTitle: 'Скоро<br/>новый забег',
+            cardDates: 'Следи за анонсами',
+            bgColor: '#003593',
+            btnsPosition: 'bottom-right',
+            isRegBtn: true,
+            regBtnUrl: 'https://t.me/Asiaeuropemgn',
+            regBtnBorderColor: '#FFFFFF',
+            regBtnTextColor: '#FFFFFF',
+        },
+        {
+            id: 'placeholder-2',
+            title: 'Скоро',
+            date: '2099-01-02',
+            cardTitle: 'Открытие<br/>регистрации',
+            cardDates: 'Уже скоро',
+            bgColor: '#111827',
+            btnsPosition: 'bottom-right',
+            isRegBtn: true,
+            regBtnUrl: 'https://t.me/Asiaeuropemgn',
+            regBtnBorderColor: '#FFFFFF',
+            regBtnTextColor: '#FFFFFF',
+        },
+    ];
+
+    const racesForUi =
+        racesRes.data.length > 0 ? racesRes.data : placeholderRaces;
+
+    // Не показываем ошибки загрузки на главной — вместо этого выводим заглушки/пустые секции.
 
     const heroBg =
         (mainPage.mainBgImg && norm(mainPage.mainBgImg)) || bgImg.src;
@@ -127,7 +199,7 @@ export default async function Home() {
                 </p>
             </div>
 
-            <HomeRaces items={races} />
+            <HomeRaces items={racesForUi} />
 
             <HomeGalary
                 firstLineImgs={firstLineImgs}
@@ -146,8 +218,8 @@ export default async function Home() {
                 }
             />
 
-            {teamMembers?.length && teamMembers?.length > 0 && (
-                <HomeTeams items={teamMembers} />
+            {Boolean(teamRes.data?.length) && teamRes.data?.length > 0 && (
+                <HomeTeams items={teamRes.data} />
             )}
         </>
     );

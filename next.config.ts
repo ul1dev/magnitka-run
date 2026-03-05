@@ -3,18 +3,16 @@ import type { NextConfig } from 'next';
 const nextConfig: NextConfig = {
     /* другие опции конфига */
     images: {
-        domains: [
-            'wnmarathon.runc.run',
-            'runc.run',
-            'res.cloudinary.com',
-            'shop.runc.run',
-            'localhost',
-            'магниткабежит.рф',
-            'xn--80aadgmgkenqn5dg.xn--p1ai',
+        remotePatterns: [
+            { protocol: 'https', hostname: 'wnmarathon.runc.run', pathname: '/**' },
+            { protocol: 'https', hostname: 'runc.run', pathname: '/**' },
+            { protocol: 'https', hostname: 'res.cloudinary.com', pathname: '/**' },
+            { protocol: 'https', hostname: 'shop.runc.run', pathname: '/**' },
+            { protocol: 'https', hostname: 'магниткабежит.рф', pathname: '/**' },
+            { protocol: 'https', hostname: 'xn--80aadgmgkenqn5dg.xn--p1ai', pathname: '/**' },
+            { protocol: 'http', hostname: 'localhost', pathname: '/**' },
+            { protocol: 'https', hostname: 'localhost', pathname: '/**' },
         ],
-    },
-    eslint: {
-        ignoreDuringBuilds: true,
     },
 };
 
