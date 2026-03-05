@@ -4,7 +4,7 @@ services:
             context: ./
             dockerfile: Dockerfile
         container_name: 'magnitkarunclient'
-        image: ulidev/magnitkarunclient:v1.0.0
+        image: ulidev/magnitkarunclient:v1.0.1
         restart: always
 
         user: '1001:1001'
@@ -25,6 +25,7 @@ services:
         environment:
             NODE_ENV: production
             NEXT_TELEMETRY_DISABLED: 1
+            API_BASE: http://magnitkarunbot:8080
 
         healthcheck:
             test:

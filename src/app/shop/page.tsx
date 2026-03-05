@@ -7,8 +7,10 @@ export const metadata: Metadata = {
 };
 
 const API_BASE =
-    process.env.NEXT_PUBLIC_API_BASE?.replace(/\/$/, '') ??
-    'http://localhost:5000';
+    (process.env.API_BASE ?? process.env.NEXT_PUBLIC_API_BASE)?.replace(
+        /\/$/,
+        '',
+    ) ?? 'http://localhost:8080';
 
 // нормализация путей к картинкам
 function norm(u?: string | null): string | undefined {
@@ -38,7 +40,7 @@ async function getProducts(): Promise<ShopProduct[]> {
         items.sort(
             (a, b) =>
                 new Date(b.createdAt).getTime() -
-                new Date(a.createdAt).getTime()
+                new Date(a.createdAt).getTime(),
         );
 
         return items;

@@ -20,7 +20,7 @@ export function clearAdminSecret() {
     } catch {}
 }
 
-const API_BASE = process.env.NEXT_PUBLIC_API_BASE!.replace(/\/$/, '');
+const API_BASE = (process.env.NEXT_PUBLIC_API_BASE || '').replace(/\/$/, '');
 
 export async function adminFetch<T>(
     path: string,
@@ -29,15 +29,15 @@ export async function adminFetch<T>(
         json?: any;
         formData?: FormData;
         requireSecret?: boolean;
-    } = {}
+    } = {},
 ): Promise<T> {
     const method = opts.method ?? 'GET';
     const headers: Record<string, string> = {};
     const body: BodyInit | undefined = opts.formData
         ? opts.formData
         : opts.json
-        ? JSON.stringify(opts.json)
-        : undefined;
+          ? JSON.stringify(opts.json)
+          : undefined;
 
     if (opts.json) headers['Content-Type'] = 'application/json';
 

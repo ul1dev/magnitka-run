@@ -7,8 +7,10 @@ import bgImg from '@/app/static/images/ZEA_0745_1.jpg.webp';
 import HomeTeams from '@/components/home/Team';
 
 const API_BASE =
-    process.env.NEXT_PUBLIC_API_BASE?.replace(/\/$/, '') ??
-    'http://localhost:8080';
+    (process.env.API_BASE ?? process.env.NEXT_PUBLIC_API_BASE)?.replace(
+        /\/$/,
+        '',
+    ) ?? 'http://localhost:8080';
 
 function norm(u?: string | null): string | undefined {
     if (!u) return undefined;
