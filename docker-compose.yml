@@ -7,7 +7,23 @@ services:
         container_name: 'magnitkarunclient'
         image: ulidev/magnitkarunclient
 
+        user: '1000:1000'
+
         restart: always
 
+        security_opt:
+            - no-new-privileges:true
+        cap_drop:
+            - ALL
+        read_only: true
+        tmpfs:
+            - /tmp
+
         ports:
-            - '3000:3000'
+            - '127.0.0.1:3000:3000'
+
+        healthcheck:
+            test: ['CMD', 'curl', '-f', 'http://localhost:3000']
+            interval: 30s
+            timeout: 10s
+            retries: 3
