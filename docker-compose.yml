@@ -5,7 +5,7 @@ services:
         build: ./
 
         container_name: 'magnitkarunclient'
-        image: ulidev/magnitkarunclient
+        image: ulidev/magnitkarunclient:v1.0.0
 
         user: '1000:1000'
 
@@ -23,7 +23,15 @@ services:
             - '127.0.0.1:3000:3000'
 
         healthcheck:
-            test: ['CMD', 'curl', '-f', 'http://localhost:3000']
+            test:
+                [
+                    'CMD',
+                    'wget',
+                    '--no-verbose',
+                    '--tries=1',
+                    '--spider',
+                    'http://localhost:3000',
+                ]
             interval: 30s
             timeout: 10s
             retries: 3
