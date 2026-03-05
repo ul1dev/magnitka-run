@@ -1,26 +1,30 @@
-version: '3'
-
 services:
     magnitkarunclient:
-        build: ./
-
+        build:
+            context: ./
+            dockerfile: Dockerfile
         container_name: 'magnitkarunclient'
         image: ulidev/magnitkarunclient:v1.0.0
-
-        user: '1000:1000'
-
         restart: always
 
+        user: '1001:1001'
         security_opt:
             - no-new-privileges:true
         cap_drop:
             - ALL
         read_only: true
+        init: true
+
         tmpfs:
             - /tmp
+            - /app/.next/cache:uid=1001,gid=1001
 
         ports:
             - '127.0.0.1:3000:3000'
+
+        environment:
+            NODE_ENV: production
+            NEXT_TELEMETRY_DISABLED: 1
 
         healthcheck:
             test:
@@ -35,3 +39,17 @@ services:
             interval: 30s
             timeout: 10s
             retries: 3
+            start_period: 20s
+
+        logging:
+            driver: json-file
+            options:
+                max-size: 10m
+                max-file: '3'
+
+        networks:
+            - magnitkarunbot_network
+
+networks:
+    magnitkarunbot_network:
+        external: true
