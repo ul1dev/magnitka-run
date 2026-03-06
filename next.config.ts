@@ -24,6 +24,11 @@ const nextConfig: NextConfig = {
             },
             {
                 protocol: 'https',
+                hostname: 's3.twcstorage.ru',
+                pathname: '/**',
+            },
+            {
+                protocol: 'https',
                 hostname: 'магниткабежит.рф',
                 pathname: '/**',
             },
